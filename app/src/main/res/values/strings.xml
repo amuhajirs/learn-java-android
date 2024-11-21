@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">Test</string>
+    <string name="title_activity_login">Selamat Datang</string>
+    <string name="desc_activity_login">Masukkan Email dan Kata Sandi untuk mengakses akun Anda.</string>
+    <string name="prompt_email">Email</string>
+    <string name="prompt_password">Kata Sandi</string>
+    <string name="login_btn">Masuk</string>
+    <string name="forgot_password">Lupa Kata Sandi?</string>
+    <string name="no_account">Belum Punya Akun? </string>
+    <string name="other_login">atau masuk dengan</string>
+    <string name="search">Pencarian</string>
+</resources>

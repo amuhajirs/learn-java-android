@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">Test</string>
+    <string name="title_activity_login">Welcome</string>
+    <string name="desc_activity_login">Enter your Email and Password to access your account.</string>
+    <string name="prompt_email">Email</string>
+    <string name="prompt_password">Password</string>
+    <string name="login_btn">Login</string>
+    <string name="forgot_password">Forgot Password?</string>
+    <string name="no_account">Dont Have an Account? </string>
+    <string name="other_login">or login with</string>
+    <string name="search">Search</string>
+</resources>
