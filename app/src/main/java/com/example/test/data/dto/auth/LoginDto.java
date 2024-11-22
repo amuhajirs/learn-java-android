@@ -1,14 +1,16 @@
-package com.example.test.data.dto;
+package com.example.test.data.dto.auth;
 
+import com.example.test.domain.model.Token;
+import com.example.test.domain.model.User;
 import com.google.gson.annotations.SerializedName;
 
 public class LoginDto {
     public static class Body {
         @SerializedName("email")
-        private String email;
+        final private String email;
 
         @SerializedName("password")
-        private String password;
+        final private String password;
 
         public Body(String email, String password) {
             this.email = email;

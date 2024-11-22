@@ -1,4 +1,4 @@
-package com.example.test.utils;
+package com.example.test.helper.utils;
 
 import android.util.Log;
 
@@ -48,7 +48,14 @@ public class DataStoreSingleton {
 
         Preferences.Key<String> key = new Preferences.Key<>(keyName);
 
-        datastore.data().map(preferences -> preferences.get(key))
+        datastore.data().map(preferences -> {
+                    String pref = preferences.get(key);
+                    if(pref == null) {
+                        return "";
+                    } else {
+                        return pref;
+                    }
+                })
                 .subscribeOn(Schedulers.io())
                 .subscribe(new FlowableSubscriber<String>() {
                     @Override
@@ -71,6 +78,21 @@ public class DataStoreSingleton {
 
                     }
                 });
+    }
+
+    public String getValueSync(String keyName) {
+        if (datastore == null) return null;
+
+        Preferences.Key<String> key = new Preferences.Key<>(keyName);
+
+        return datastore.data().map(preferences -> {
+            String pref = preferences.get(key);
+            if(pref == null) {
+                return "";
+            } else {
+                return pref;
+            }
+        }).blockingFirst();
     }
 
     public interface GetValueCb {

@@ -2,14 +2,14 @@ package com.example.test.data.repository;
 
 import com.example.test.data.api.AuthApi;
 import com.example.test.data.api.RetrofitClient;
-import com.example.test.data.dto.GetProfileDto;
-import com.example.test.data.dto.LoginDto;
-import com.example.test.data.dto.LogoutDto;
+import com.example.test.data.dto.auth.GetProfileDto;
+import com.example.test.data.dto.auth.LoginDto;
+import com.example.test.data.dto.auth.LogoutDto;
 
 import retrofit2.Call;
 
 public class AuthRepository {
-    private AuthApi authApi;
+    private final AuthApi authApi;
 
     public AuthRepository() {
         authApi = RetrofitClient.getClient().create(AuthApi.class);

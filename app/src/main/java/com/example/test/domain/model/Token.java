@@ -1,4 +1,4 @@
-package com.example.test.data.dto;
+package com.example.test.domain.model;
 
 import com.google.gson.annotations.SerializedName;
 

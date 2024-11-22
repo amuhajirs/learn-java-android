@@ -1,8 +1,8 @@
 package com.example.test.data.api;
 
-import com.example.test.data.dto.GetProfileDto;
-import com.example.test.data.dto.LoginDto;
-import com.example.test.data.dto.LogoutDto;
+import com.example.test.data.dto.auth.GetProfileDto;
+import com.example.test.data.dto.auth.LoginDto;
+import com.example.test.data.dto.auth.LogoutDto;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
