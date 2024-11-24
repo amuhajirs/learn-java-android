@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Test</string>
+    <string name="app_name">Learn</string>
     <string name="title_activity_login">Welcome</string>
     <string name="desc_activity_login">Enter your Email and Password to access your account.</string>
     <string name="prompt_email">Email</string>
