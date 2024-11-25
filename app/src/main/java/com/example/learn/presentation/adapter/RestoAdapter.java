@@ -61,7 +61,6 @@ public class RestoAdapter extends RecyclerView.Adapter<RestoAdapter.RestoViewHol
 
         holder.cardResto.setOnClickListener(v -> {
             context.startActivity(new Intent(context, RestoDetailActivity.class));
-            Log.d("RESTO CLICKED", v.toString());
         });
     }
 

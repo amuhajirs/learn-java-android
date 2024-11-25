@@ -1,5 +1,7 @@
 package com.example.learn.data.api;
 
+import androidx.annotation.NonNull;
+
 import com.example.learn.helper.constant.DatastoreConst;
 import com.example.learn.helper.utils.DataStoreSingleton;
 
@@ -10,6 +12,7 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 public class AuthInterceptor implements Interceptor {
+    @NonNull
     @Override
     public Response intercept(Chain chain) throws IOException {
         Request originalRequest = chain.request();
@@ -17,7 +20,7 @@ public class AuthInterceptor implements Interceptor {
 
         String token = DataStoreSingleton.getInstance().getValueSync(DatastoreConst.ACC_TOKEN);
 
-        if (token != null && token != "") {
+        if (token != null && !token.isEmpty()) {
             newRequest.addHeader("Authorization", "Bearer " + token);
         }
 

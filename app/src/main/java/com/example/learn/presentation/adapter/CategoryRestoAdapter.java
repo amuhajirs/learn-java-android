@@ -28,7 +28,6 @@ public class CategoryRestoAdapter extends RecyclerView.Adapter<CategoryRestoAdap
         this.restoCategories = restoCategories;
     }
 
-    @NonNull
     @Override
     public CategoryRestoViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
@@ -38,11 +37,10 @@ public class CategoryRestoAdapter extends RecyclerView.Adapter<CategoryRestoAdap
 
     @Override
     public void onBindViewHolder(@NonNull CategoryRestoViewHolder holder, int position) {
+        Log.d("CATEGORY RESTO", String.valueOf(position));
         if (restoCategories == null) {
             return;
         }
-
-        Log.d("RestoRecycler HEIGHT", "restoRecycler Height: " + holder.restoRecycler.getHeight());
 
         RestaurantsPerCategory restoCategory = restoCategories.get(position);
         holder.categoryName.setText(restoCategory.category.name);
@@ -54,11 +52,6 @@ public class CategoryRestoAdapter extends RecyclerView.Adapter<CategoryRestoAdap
         restoAdapter.setRestos(restoList, restoCategory.category);
 
         holder.restoRecycler.setAdapter(restoAdapter);
-        holder.restoRecycler.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false));
-        holder.restoRecycler.setNestedScrollingEnabled(false);
-
-//        holder.restoRecycler.setRecycledViewPool(viewPool); // Bagikan pool yang sama untuk semua inner RecyclerView
-//        holder.restoRecycler.setAdapter(new RestoAdapter(category.getRestos())); // Isi data resto
     }
 
     @Override
@@ -77,7 +70,9 @@ public class CategoryRestoAdapter extends RecyclerView.Adapter<CategoryRestoAdap
             super(itemView);
             categoryName = itemView.findViewById(R.id.category_name);
             restoRecycler = itemView.findViewById(R.id.resto_recycler);
-            Log.d("CategoryResto HEIGHT", "categoryResto Height: " + itemView.getHeight());
+
+            restoRecycler.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false));
+            restoRecycler.setNestedScrollingEnabled(false);
         }
     }
 }

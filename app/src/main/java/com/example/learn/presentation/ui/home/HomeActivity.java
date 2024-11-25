@@ -2,6 +2,7 @@ package com.example.learn.presentation.ui.home;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.Toast;
@@ -13,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.learn.R;
 import com.example.learn.data.dto.resto.RestaurantsPerCategory;
+import com.example.learn.domain.model.Category;
 import com.example.learn.presentation.adapter.CategoryRestoAdapter;
 import com.example.learn.presentation.ui.login.LoginActivity;
 
@@ -41,6 +43,9 @@ public class HomeActivity extends AppCompatActivity {
 
         btnLogoutEl.setOnClickListener(this::handleLogout);
 
+        categoryRestoRecycler.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
+        categoryRestoRecycler.setNestedScrollingEnabled(false);
+
         viewModel.getLogoutSuccessMsg().observe(this, msg -> {
             Toast.makeText(HomeActivity.this, msg, Toast.LENGTH_LONG).show();
             Intent intent = new Intent(HomeActivity.this, LoginActivity.class);
@@ -66,11 +71,6 @@ public class HomeActivity extends AppCompatActivity {
         categoryRestoAdapter = new CategoryRestoAdapter(this, restoCategories);
 
         categoryRestoRecycler.setAdapter(categoryRestoAdapter);
-        categoryRestoRecycler.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
-        categoryRestoRecycler.setNestedScrollingEnabled(false);
-
-        RecyclerView.RecycledViewPool viewPool = new RecyclerView.RecycledViewPool();
-        categoryRestoRecycler.setRecycledViewPool(viewPool);
     }
 
     public void handleLogout(View v) {
