@@ -1,57 +1,63 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical"
-    tools:context=".presentation.ui.home.HomeActivity">
+    android:layout_height="match_parent">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="70dp"
-        android:gravity="center_horizontal|center_vertical"
-        android:orientation="horizontal"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        tools:context=".presentation.ui.home.HomeActivity">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="70dp"
+            android:gravity="center_horizontal|center_vertical"
+            android:orientation="horizontal"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <ImageView
+                android:id="@+id/imageView5"
+                android:layout_width="12dp"
+                android:layout_height="50dp"
+                android:layout_weight="1"
+                tools:srcCompat="@drawable/logo" />
+
+            <EditText
+                android:id="@+id/editTextText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:ems="10"
+                android:hint="@string/search"
+                android:inputType="text" />
+
+            <ImageButton
+                android:id="@+id/logout_btn"
+                android:layout_width="5dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@android:color/transparent"
+                android:src="@drawable/baseline_power_settings_new_24" />
+        </LinearLayout>
 
         <ImageView
-            android:id="@+id/imageView5"
-            android:layout_width="12dp"
-            android:layout_height="50dp"
-            android:layout_weight="1"
-            tools:srcCompat="@drawable/logo" />
-
-        <EditText
-            android:id="@+id/editTextText"
-            android:layout_width="wrap_content"
+            android:id="@+id/imageView6"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:ems="10"
-            android:hint="@string/search"
-            android:inputType="text" />
+            app:srcCompat="@drawable/banner_home" />
 
-        <ImageButton
-            android:id="@+id/logout_btn"
-            android:layout_width="5dp"
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/category_resto_recycler"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:background="@android:color/transparent"
-            android:src="@drawable/baseline_power_settings_new_24" />
+            tools:itemCount="3"
+            tools:listitem="@layout/category_resto" />
+
     </LinearLayout>
-
-    <ImageView
-        android:id="@+id/imageView6"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:srcCompat="@drawable/banner_home" />
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/category_resto_recycler"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        tools:itemCount="3"
-        tools:listitem="@layout/category_resto" />
-
-</LinearLayout>
+</ScrollView>

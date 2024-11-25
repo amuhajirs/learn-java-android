@@ -50,7 +50,7 @@ public class CategoryRestoAdapter extends RecyclerView.Adapter<CategoryRestoAdap
         ArrayList<Restaurant> restoList = new ArrayList<>();
         Collections.addAll(restoList, restoCategory.data);
 
-        RestoAdapter restoAdapter = new RestoAdapter();
+        RestoAdapter restoAdapter = new RestoAdapter(context);
         restoAdapter.setRestos(restoList, restoCategory.category);
 
         holder.restoRecycler.setAdapter(restoAdapter);
