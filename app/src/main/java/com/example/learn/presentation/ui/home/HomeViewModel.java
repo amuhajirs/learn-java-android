@@ -9,23 +9,33 @@ import androidx.lifecycle.ViewModel;
 import com.example.learn.data.dto.ErrorDto;
 import com.example.learn.data.dto.auth.LogoutDto;
 import com.example.learn.data.dto.resto.GetRestosDto;
-import com.example.learn.data.repository.AuthRepository;
-import com.example.learn.data.repository.RestoRepository;
+import com.example.learn.domain.repository.AuthRepository;
+import com.example.learn.domain.repository.RestoRepository;
 import com.example.learn.helper.constant.DatastoreConst;
 import com.example.learn.helper.utils.DataStoreSingleton;
 import com.google.gson.Gson;
 
+import javax.inject.Inject;
+
+import dagger.hilt.android.lifecycle.HiltViewModel;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+@HiltViewModel
 public class HomeViewModel extends ViewModel {
+    private final RestoRepository restoRepository;
+    private final AuthRepository authRepository;
     private final MutableLiveData<String> logoutSuccessMsg = new MutableLiveData<>();
     private final MutableLiveData<String> logoutErrorMsg = new MutableLiveData<>();
     private final MutableLiveData<GetRestosDto.Response> restos = new MutableLiveData<>();
     private final MutableLiveData<String> getRestoErrorMsg = new MutableLiveData<>();
 
-    private RestoRepository restoRepo = new RestoRepository();
+    @Inject
+    public HomeViewModel(RestoRepository restoRepository, AuthRepository authRepository) {
+        this.restoRepository = restoRepository;
+        this.authRepository = authRepository;
+    }
 
     public LiveData<String> getLogoutSuccessMsg() {
         return logoutSuccessMsg;
@@ -44,8 +54,7 @@ public class HomeViewModel extends ViewModel {
 
     public void logout() {
         DataStoreSingleton.getInstance().getValue(DatastoreConst.REF_TOKEN, s -> {
-            AuthRepository repo = new AuthRepository();
-            repo.logout(new LogoutDto.Body(s)).enqueue(new Callback<LogoutDto.Response>() {
+            authRepository.logout(new LogoutDto.Body(s)).enqueue(new Callback<LogoutDto.Response>() {
                 @Override
                 public void onResponse(Call<LogoutDto.Response> call, Response<LogoutDto.Response> response) {
                     if(response.isSuccessful()) {
@@ -83,7 +92,7 @@ public class HomeViewModel extends ViewModel {
     }
 
     private void fetchRestos() {
-        restoRepo.getRestos().enqueue(new Callback<GetRestosDto.Response>() {
+        restoRepository.getRestos().enqueue(new Callback<GetRestosDto.Response>() {
             @Override
             public void onResponse(Call<GetRestosDto.Response> call, Response<GetRestosDto.Response> response) {
                 if(response.isSuccessful()) {

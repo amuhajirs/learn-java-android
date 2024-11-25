@@ -13,15 +13,16 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.learn.R;
 import com.example.learn.data.dto.resto.RestaurantsPerCategory;
-import com.example.learn.domain.model.Restaurant;
 import com.example.learn.presentation.adapter.CategoryRestoAdapter;
-import com.example.learn.presentation.adapter.RestoAdapter;
 import com.example.learn.presentation.ui.login.LoginActivity;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import dagger.hilt.android.AndroidEntryPoint;
+
+@AndroidEntryPoint
 public class HomeActivity extends AppCompatActivity {
     private ImageButton btnLogoutEl;
     private HomeViewModel viewModel;
@@ -66,7 +67,6 @@ public class HomeActivity extends AppCompatActivity {
 
         categoryRestoRecycler.setAdapter(categoryRestoAdapter);
         categoryRestoRecycler.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
-        categoryRestoRecycler.setHasFixedSize(true);
         categoryRestoRecycler.setNestedScrollingEnabled(false);
 
         RecyclerView.RecycledViewPool viewPool = new RecyclerView.RecycledViewPool();

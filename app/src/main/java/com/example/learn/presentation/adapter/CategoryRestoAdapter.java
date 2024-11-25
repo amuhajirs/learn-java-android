@@ -5,17 +5,14 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bumptech.glide.Glide;
 import com.example.learn.R;
 import com.example.learn.data.dto.resto.RestaurantsPerCategory;
-import com.example.learn.domain.model.Category;
 import com.example.learn.domain.model.Restaurant;
 
 import java.util.ArrayList;
@@ -58,7 +55,6 @@ public class CategoryRestoAdapter extends RecyclerView.Adapter<CategoryRestoAdap
 
         holder.restoRecycler.setAdapter(restoAdapter);
         holder.restoRecycler.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false));
-        holder.restoRecycler.setHasFixedSize(true);
         holder.restoRecycler.setNestedScrollingEnabled(false);
 
 //        holder.restoRecycler.setRecycledViewPool(viewPool); // Bagikan pool yang sama untuk semua inner RecyclerView

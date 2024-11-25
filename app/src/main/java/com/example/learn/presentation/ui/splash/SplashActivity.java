@@ -11,6 +11,9 @@ import com.example.learn.R;
 import com.example.learn.presentation.ui.home.HomeActivity;
 import com.example.learn.presentation.ui.login.LoginActivity;
 
+import dagger.hilt.android.AndroidEntryPoint;
+
+@AndroidEntryPoint
 public class SplashActivity extends AppCompatActivity {
     private SplashViewModel viewModel;
 
@@ -30,7 +33,7 @@ public class SplashActivity extends AppCompatActivity {
                     Intent intent = new Intent(SplashActivity.this, HomeActivity.class);
                     startActivity(intent);
                     finish();
-                }, 1500);
+                }, 1000);
             }
 
             @Override
@@ -39,7 +42,7 @@ public class SplashActivity extends AppCompatActivity {
                     Intent intent = new Intent(SplashActivity.this, LoginActivity.class);
                     startActivity(intent);
                     finish();
-                }, 1500);
+                }, 1000);
             }
         });
     }

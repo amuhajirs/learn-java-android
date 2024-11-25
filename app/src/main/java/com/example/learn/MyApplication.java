@@ -9,6 +9,9 @@ import androidx.datastore.rxjava2.RxDataStore;
 import com.example.learn.helper.constant.DatastoreConst;
 import com.example.learn.helper.utils.DataStoreSingleton;
 
+import dagger.hilt.android.HiltAndroidApp;
+
+@HiltAndroidApp
 public class MyApplication extends Application {
     @Override
     public void onCreate() {

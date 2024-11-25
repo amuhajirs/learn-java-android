@@ -14,6 +14,9 @@ import androidx.lifecycle.ViewModelProvider;
 import com.example.learn.R;
 import com.example.learn.presentation.ui.home.HomeActivity;
 
+import dagger.hilt.android.AndroidEntryPoint;
+
+@AndroidEntryPoint
 public class LoginActivity extends AppCompatActivity {
     private EditText emailEl, passwordEl;
     private Button btnLoginEl, btnGoogleEl;
