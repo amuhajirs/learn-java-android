@@ -38,7 +38,7 @@ public class RestoAdapter extends RecyclerView.Adapter<RestoAdapter.RestoViewHol
 
     @Override
     public void onBindViewHolder(@NonNull RestoViewHolder holder, int position) {
-        if(restos == null) {
+        if (restos == null) {
             return;
         }
 
@@ -58,7 +58,7 @@ public class RestoAdapter extends RecyclerView.Adapter<RestoAdapter.RestoViewHol
 
     @Override
     public int getItemCount() {
-        if(restos == null) {
+        if (restos == null) {
             return 0;
         }
         return restos.size();

@@ -48,4 +48,5 @@ dependencies {
     annotationProcessor("com.github.bumptech.glide:compiler:4.15.1")
     implementation("com.google.dagger:hilt-android:2.48")
     annotationProcessor("com.google.dagger:hilt-compiler:2.48")
+    implementation("androidx.core:core-splashscreen:1.0.1")
 }

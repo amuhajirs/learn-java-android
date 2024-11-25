@@ -7,7 +7,7 @@ public class LogoutDto {
         @SerializedName("refresh_token")
         final private String refreshToken;
 
-        public Body (String refreshToken) {
+        public Body(String refreshToken) {
             this.refreshToken = refreshToken;
         }
     }

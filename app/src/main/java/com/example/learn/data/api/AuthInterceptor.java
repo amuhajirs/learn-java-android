@@ -17,7 +17,7 @@ public class AuthInterceptor implements Interceptor {
 
         String token = DataStoreSingleton.getInstance().getValueSync(DatastoreConst.ACC_TOKEN);
 
-        if(token != null && token != "") {
+        if (token != null && token != "") {
             newRequest.addHeader("Authorization", "Bearer " + token);
         }
 

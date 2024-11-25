@@ -14,17 +14,22 @@ import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 
 public class DataStoreSingleton {
-    RxDataStore<Preferences> datastore;
     private static final DataStoreSingleton ourInstance = new DataStoreSingleton();
+    RxDataStore<Preferences> datastore;
+
+    private DataStoreSingleton() {
+    }
+
     public static DataStoreSingleton getInstance() {
         return ourInstance;
     }
-    private DataStoreSingleton() { }
-    public void setDataStore(RxDataStore<Preferences> datastore) {
-        this.datastore = datastore;
-    }
+
     public RxDataStore<Preferences> getDataStore() {
         return datastore;
+    }
+
+    public void setDataStore(RxDataStore<Preferences> datastore) {
+        this.datastore = datastore;
     }
 
     public void saveValue(String keyName, String value) {
@@ -50,7 +55,7 @@ public class DataStoreSingleton {
 
         datastore.data().map(preferences -> {
                     String pref = preferences.get(key);
-                    if(pref == null) {
+                    if (pref == null) {
                         return "";
                     } else {
                         return pref;
@@ -87,7 +92,7 @@ public class DataStoreSingleton {
 
         return datastore.data().map(preferences -> {
             String pref = preferences.get(key);
-            if(pref == null) {
+            if (pref == null) {
                 return "";
             } else {
                 return pref;

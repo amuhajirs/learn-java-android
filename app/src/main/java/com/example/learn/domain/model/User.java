@@ -5,7 +5,7 @@ import com.google.gson.annotations.SerializedName;
 public class User {
     public int id;
     public String name;
-    public  String email;
+    public String email;
     public String phone;
     public String avatar;
 

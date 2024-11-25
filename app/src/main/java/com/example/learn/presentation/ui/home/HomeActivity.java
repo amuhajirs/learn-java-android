@@ -54,7 +54,7 @@ public class HomeActivity extends AppCompatActivity {
         });
 
         viewModel.getRestos().observe(this, restos -> {
-            if(restos != null) {
+            if (restos != null) {
                 ArrayList<RestaurantsPerCategory> restoCategoryList = new ArrayList<>();
                 Collections.addAll(restoCategoryList, restos.data);
                 handleGetRestos(restoCategoryList);

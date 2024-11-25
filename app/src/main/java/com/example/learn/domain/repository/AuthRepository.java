@@ -8,9 +8,9 @@ import retrofit2.Call;
 
 public interface AuthRepository {
 
-    public Call<LoginDto.Response> login(LoginDto.Body body);
+    Call<LoginDto.Response> login(LoginDto.Body body);
 
-    public Call<LogoutDto.Response> logout(LogoutDto.Body body);
+    Call<LogoutDto.Response> logout(LogoutDto.Body body);
 
-    public Call<GetProfileDto> getProfile();
+    Call<GetProfileDto> getProfile();
 }

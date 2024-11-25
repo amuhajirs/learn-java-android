@@ -20,8 +20,8 @@ import java.util.Collections;
 import java.util.List;
 
 public class CategoryRestoAdapter extends RecyclerView.Adapter<CategoryRestoAdapter.CategoryRestoViewHolder> {
-    private List<RestaurantsPerCategory> restoCategories;
-    private Context context;
+    private final List<RestaurantsPerCategory> restoCategories;
+    private final Context context;
 
     public CategoryRestoAdapter(Context context, List<RestaurantsPerCategory> restoCategories) {
         this.context = context;
@@ -38,7 +38,7 @@ public class CategoryRestoAdapter extends RecyclerView.Adapter<CategoryRestoAdap
 
     @Override
     public void onBindViewHolder(@NonNull CategoryRestoViewHolder holder, int position) {
-        if(restoCategories == null) {
+        if (restoCategories == null) {
             return;
         }
 
@@ -63,7 +63,7 @@ public class CategoryRestoAdapter extends RecyclerView.Adapter<CategoryRestoAdap
 
     @Override
     public int getItemCount() {
-        if(restoCategories == null) {
+        if (restoCategories == null) {
             return 0;
         }
         return restoCategories.size();

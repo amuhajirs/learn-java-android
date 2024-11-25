@@ -1,11 +1,11 @@
 <resources>
     <!-- Base application theme. -->
-    <style name="Base.Theme.Test" parent="Theme.Material3.DayNight.NoActionBar">
+    <style name="Base.Theme.Learn" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Customize your light theme here. -->
         <item name="colorPrimary">@color/primary</item>
         <item name="colorOnPrimary">@color/white</item>
         <item name="android:textColor">@color/text_dark</item>
     </style>
 
-    <style name="Theme.Test" parent="Base.Theme.Test" />
+    <style name="Theme.Test" parent="Base.Theme.Learn" />
 </resources>
