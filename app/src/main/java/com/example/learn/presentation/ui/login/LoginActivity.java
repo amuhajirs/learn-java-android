@@ -12,7 +12,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.learn.R;
-import com.example.learn.presentation.ui.home.HomeActivity;
+import com.example.learn.presentation.ui.main.MainActivity;
 
 import dagger.hilt.android.AndroidEntryPoint;
 
@@ -39,7 +39,7 @@ public class LoginActivity extends AppCompatActivity {
 
         viewModel.getLoginSuccess().observe(this, message -> {
             Toast.makeText(LoginActivity.this, message, Toast.LENGTH_LONG).show();
-            Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
+            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
             startActivity(intent);
             finish();
         });

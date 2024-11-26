@@ -23,7 +23,7 @@ public class GetProfileUseCase {
             @Override
             public void onResponse(Call<GetProfileDto> call, Response<GetProfileDto> response) {
                 if (response.isSuccessful()) {
-                    cb.onAuthenticated();
+                    cb.onAuthenticated(response.body());
                 } else {
                     cb.onGuest();
                 }

@@ -1,9 +1,10 @@
 <resources>
     <!-- Base application theme. -->
-    <style name="Base.Theme.Learn" parent="Theme.Material3.DayNight.NoActionBar">
+    <style name="Base.Theme.Learn" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <!-- Customize your dark theme here. -->
         <item name="colorPrimary">@color/primary</item>
         <item name="colorOnPrimary">@color/white</item>
-        <item name="android:textColor">@color/text_light</item>
+        <item name="android:textColor">@color/text</item>
+        <item name="android:windowBackground">@color/bg_body</item>
     </style>
 </resources>

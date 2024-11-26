@@ -2,6 +2,7 @@ package com.example.learn.presentation.ui.splash;
 
 import androidx.lifecycle.ViewModel;
 
+import com.example.learn.data.dto.auth.GetProfileDto;
 import com.example.learn.domain.usecase.GetProfileUseCase;
 import com.example.learn.helper.constant.DatastoreConst;
 import com.example.learn.helper.utils.DataStoreSingleton;
@@ -30,7 +31,7 @@ public class SplashViewModel extends ViewModel {
     }
 
     public interface CheckAuthCb {
-        void onAuthenticated();
+        void onAuthenticated(GetProfileDto response);
 
         void onGuest();
     }
