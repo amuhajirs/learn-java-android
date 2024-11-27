@@ -1,6 +1,7 @@
 package com.example.learn.data.repository;
 
 import com.example.learn.data.api.RestoApi;
+import com.example.learn.data.dto.resto.GetProductsDto;
 import com.example.learn.data.dto.resto.GetRestosDto;
 import com.example.learn.domain.repository.RestoRepository;
 
@@ -15,5 +16,9 @@ public class RestoRepositoryImpl implements RestoRepository {
 
     public Call<GetRestosDto.Response> getRestos() {
         return restoApi.getRestos("", "1", "10", "id", "desc", "");
+    }
+
+    public Call<GetProductsDto.Response> getProducts(int restaurantId) {
+        return restoApi.getProducts(restaurantId, "", "1", "10", "id", "desc", "");
     }
 }

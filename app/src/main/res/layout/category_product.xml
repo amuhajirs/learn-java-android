@@ -19,17 +19,16 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="4dp"
             android:layout_marginBottom="10dp"
-            android:text="Semua Resto"
+            android:text="Semua Produk"
             android:textSize="16sp"
             android:textStyle="bold" />
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/resto_recycler"
+            android:id="@+id/product_recycler"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:nestedScrollingEnabled="false"
-            tools:itemCount="1"
-            tools:listitem="@layout/card_resto" />
+            android:layout_height="match_parent"
+            tools:listitem="@layout/card_product" />
+
 
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

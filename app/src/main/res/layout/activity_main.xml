@@ -36,8 +36,8 @@
         android:layout_height="wrap_content"
         android:backgroundTint="@color/primary"
         android:src="@drawable/ic_plus"
-        app:layout_anchor="@id/bottomAppBar"
         app:borderWidth="0dp"
-        app:fabCustomSize="60dp"/>
+        app:layout_anchor="@id/bottomAppBar"
+        app:fabCustomSize="60dp" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

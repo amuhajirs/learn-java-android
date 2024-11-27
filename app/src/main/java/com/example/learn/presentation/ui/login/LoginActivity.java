@@ -34,9 +34,16 @@ public class LoginActivity extends AppCompatActivity {
         btnLoginEl = findViewById(R.id.login_btn);
         btnGoogleEl = findViewById(R.id.google_btn);
 
+        listeners();
+        stateObserver();
+    }
+
+    private void listeners() {
         btnLoginEl.setOnClickListener(this::handleLogin);
         btnGoogleEl.setOnClickListener(this::handleGoogle);
+    }
 
+    private void stateObserver() {
         viewModel.getLoginSuccess().observe(this, message -> {
             Toast.makeText(LoginActivity.this, message, Toast.LENGTH_LONG).show();
             Intent intent = new Intent(LoginActivity.this, MainActivity.class);

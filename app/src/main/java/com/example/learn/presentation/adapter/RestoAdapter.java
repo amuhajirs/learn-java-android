@@ -59,7 +59,15 @@ public class RestoAdapter extends RecyclerView.Adapter<RestoAdapter.RestoViewHol
         holder.restoRatingCount.setText(String.format("(%d)", resto.ratingCount));
 
         holder.cardResto.setOnClickListener(v -> {
-            context.startActivity(new Intent(context, RestoDetailActivity.class));
+            Intent intent = new Intent(context, RestoDetailActivity.class);
+            intent.putExtra("id", String.valueOf(resto.id));
+            intent.putExtra("banner", resto.banner);
+            intent.putExtra("avatar", resto.avatar);
+            intent.putExtra("name", resto.name);
+            intent.putExtra("category", category.name);
+            intent.putExtra("rating_avg", resto.ratingAvg);
+            intent.putExtra("rating_count", resto.ratingCount);
+            context.startActivity(intent);
         });
     }
 
@@ -78,7 +86,7 @@ public class RestoAdapter extends RecyclerView.Adapter<RestoAdapter.RestoViewHol
 
         public RestoViewHolder(@NonNull View itemView) {
             super(itemView);
-            restoImage = itemView.findViewById(R.id.resto_img);
+            restoImage = itemView.findViewById(R.id.resto_avatar);
             restoName = itemView.findViewById(R.id.resto_name);
             restoCategory = itemView.findViewById(R.id.resto_category);
             restoRating = itemView.findViewById(R.id.resto_rating);

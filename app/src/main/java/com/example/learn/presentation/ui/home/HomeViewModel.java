@@ -1,5 +1,7 @@
 package com.example.learn.presentation.ui.home;
 
+import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 
 import androidx.lifecycle.LiveData;
@@ -13,11 +15,13 @@ import com.example.learn.domain.usecase.GetRestosUseCase;
 import com.example.learn.domain.usecase.LogoutUseCase;
 import com.example.learn.helper.constant.DatastoreConst;
 import com.example.learn.helper.utils.DataStoreSingleton;
+import com.example.learn.presentation.ui.login.LoginActivity;
 import com.google.gson.Gson;
 
 import javax.inject.Inject;
 
 import dagger.hilt.android.lifecycle.HiltViewModel;
+import dagger.hilt.android.qualifiers.ApplicationContext;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -26,11 +30,10 @@ import retrofit2.Response;
 public class HomeViewModel extends ViewModel {
     private final GetRestosUseCase getRestosUseCase;
     private final LogoutUseCase logoutUseCase;
-
     private final MutableLiveData<String> logoutSuccessMsg = new MutableLiveData<>();
     private final MutableLiveData<String> logoutErrorMsg = new MutableLiveData<>();
     private final MutableLiveData<GetRestosDto.Response> restos = new MutableLiveData<>();
-    private final MutableLiveData<String> getRestoErrorMsg = new MutableLiveData<>();
+    private final MutableLiveData<String> errorMsgGetResto = new MutableLiveData<>();
 
     @Inject
     public HomeViewModel(GetRestosUseCase getRestosUseCase, LogoutUseCase logoutUseCase) {
@@ -44,6 +47,10 @@ public class HomeViewModel extends ViewModel {
 
     public LiveData<String> getLogoutErrorMsg() {
         return logoutErrorMsg;
+    }
+
+    public LiveData<String> getErrorMsgGetResto() {
+        return errorMsgGetResto;
     }
 
     public LiveData<GetRestosDto.Response> getRestos() {
@@ -95,10 +102,10 @@ public class HomeViewModel extends ViewModel {
                         assert response.errorBody() != null;
                         String errorBody = response.errorBody().string();
                         ErrorDto errorResponse = new Gson().fromJson(errorBody, ErrorDto.class);
-                        getRestoErrorMsg.postValue(errorResponse.message);
+                        errorMsgGetResto.postValue(errorResponse.message);
                     } catch (Exception e) {
                         Log.e("UNKNOWN GET RESTO ERROR", e.toString());
-                        getRestoErrorMsg.postValue("Gagal mendapatkan data restoran");
+                        errorMsgGetResto.postValue("Gagal mendapatkan data restoran");
                     }
                 }
             }
@@ -106,7 +113,7 @@ public class HomeViewModel extends ViewModel {
             @Override
             public void onFailure(Call<GetRestosDto.Response> call, Throwable t) {
                 Log.e("UNKNOWN GET RESTO ERROR", t.toString());
-                getRestoErrorMsg.postValue("Gagal mendapatkan data restoran");
+                errorMsgGetResto.postValue("Gagal mendapatkan data restoran");
             }
         });
     }

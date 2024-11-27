@@ -6,7 +6,7 @@
         <item name="colorOnPrimary">@color/white</item>
         <item name="android:textColor">@color/text</item>
         <item name="android:windowBackground">@color/bg_body</item>
-
+        <item name="popupMenuBackground">@color/secondary</item>
     </style>
 
     <style name="Theme.Test" parent="Base.Theme.Learn" />

@@ -24,7 +24,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_home);
+        setContentView(R.layout.activity_main);
 
         FloatingActionButton fab = findViewById(R.id.fab);
         bottomNavigationView = findViewById(R.id.bottomNavigationView);
@@ -59,7 +59,7 @@ public class MainActivity extends AppCompatActivity {
         if(currentFragment == null || !currentFragment.getClass().equals(fragment.getClass())) {
             FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
-            fragmentTransaction.replace(R.id.fragmentContainerView, fragment);
+            fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE).replace(R.id.fragmentContainerView, fragment);
             fragmentTransaction.commit();
         }
     }
