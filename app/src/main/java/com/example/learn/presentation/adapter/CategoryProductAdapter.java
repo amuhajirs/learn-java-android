@@ -22,10 +22,12 @@ import java.util.List;
 public class CategoryProductAdapter extends RecyclerView.Adapter<CategoryProductAdapter.CategoryProductViewHolder> {
     private final List<ProductsPerCategory> productCategories;
     private final Context context;
+    ProductAdapter.OnClickProduct onClickProduct;
 
-    public CategoryProductAdapter(Context context, List<ProductsPerCategory> productCategories) {
+    public CategoryProductAdapter(Context context, List<ProductsPerCategory> productCategories, ProductAdapter.OnClickProduct onClickProduct) {
         this.context = context;
         this.productCategories = productCategories;
+        this.onClickProduct = onClickProduct;
     }
 
     @Override
@@ -37,7 +39,6 @@ public class CategoryProductAdapter extends RecyclerView.Adapter<CategoryProduct
 
     @Override
     public void onBindViewHolder(@NonNull CategoryProductViewHolder holder, int position) {
-        Log.d("CATEGORY PRODUCT", String.valueOf(position));
         if (productCategories == null) {
             return;
         }
@@ -49,14 +50,13 @@ public class CategoryProductAdapter extends RecyclerView.Adapter<CategoryProduct
         Collections.addAll(productList, productCategory.data);
 
         ProductAdapter productAdapter = new ProductAdapter();
-        productAdapter.setProducts(productList, productCategory.category);
+        productAdapter.setProducts(productList, onClickProduct, context);
 
         holder.productRecycler.setAdapter(productAdapter);
     }
 
     @Override
     public int getItemCount() {
-        Log.d("PRODUCT CATEGORY SIZE", String.valueOf(productCategories.size()));
         if (productCategories == null) {
             return 0;
         }
@@ -71,8 +71,6 @@ public class CategoryProductAdapter extends RecyclerView.Adapter<CategoryProduct
             super(itemView);
             categoryName = itemView.findViewById(R.id.category_name);
             productRecycler = itemView.findViewById(R.id.product_recycler);
-
-            Log.d("PRODUCT CATEGORY", productRecycler.toString());
 
             productRecycler.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false));
             productRecycler.setNestedScrollingEnabled(false);

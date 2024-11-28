@@ -2,6 +2,7 @@ package com.example.learn.presentation.ui.home;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -90,7 +91,7 @@ public class HomeFragment extends Fragment {
             if (restos != null) {
                 ArrayList<RestaurantsPerCategory> restoCategoryList = new ArrayList<>();
                 Collections.addAll(restoCategoryList, restos.data);
-                categoryRestoAdapter = new CategoryRestoAdapter(getContext(), restoCategoryList);
+                categoryRestoAdapter = new CategoryRestoAdapter(requireContext(), restoCategoryList);
                 categoryRestoRecycler.setAdapter(categoryRestoAdapter);
             }
         });

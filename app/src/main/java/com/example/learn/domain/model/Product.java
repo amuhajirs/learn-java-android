@@ -19,7 +19,7 @@ public class Product {
     public int like;
     public int dislike;
     @SerializedName("is_liked")
-    public int isLiked;
+    public Boolean isLiked;
     @SerializedName("created_at")
     public String createdAt;
     @SerializedName("updated_at")
