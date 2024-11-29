@@ -22,9 +22,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="20dp"
+            android:fontFamily="@font/poppins_bold"
             android:text="@string/title_activity_login"
-            android:textSize="34sp"
-            android:textStyle="bold" />
+            android:textSize="32sp" />
 
         <TextView
             android:id="@+id/textView3"
@@ -33,23 +33,43 @@
             android:layout_marginBottom="20dp"
             android:text="@string/desc_activity_login" />
 
-        <EditText
-            android:id="@+id/login_email"
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="12dp"
-            android:ems="10"
-            android:hint="@string/prompt_email"
-            android:inputType="textEmailAddress" />
+            app:boxCornerRadiusBottomEnd="10dp"
+            app:boxCornerRadiusBottomStart="10dp"
+            app:boxCornerRadiusTopEnd="10dp"
+            app:boxCornerRadiusTopStart="10dp"
+            android:layout_marginBottom="12dp">
 
-        <EditText
-            android:id="@+id/login_password"
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/login_email"
+                android:padding="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textEmailAddress"
+                android:hint="@string/prompt_email" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="12dp"
-            android:ems="10"
-            android:hint="@string/prompt_password"
-            android:inputType="textPassword" />
+            app:boxCornerRadiusBottomEnd="10dp"
+            app:boxCornerRadiusBottomStart="10dp"
+            app:boxCornerRadiusTopEnd="10dp"
+            app:boxCornerRadiusTopStart="10dp"
+            android:layout_marginBottom="12dp">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/login_password"
+                android:padding="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textPassword"
+                android:hint="@string/prompt_password" />
+        </com.google.android.material.textfield.TextInputLayout>
 
         <TextView
             android:id="@+id/textView4"
@@ -65,7 +85,11 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="12dp"
             android:backgroundTint="@color/primary"
-            android:text="@string/login_btn" />
+            android:fontFamily="@font/poppins_semibold"
+            android:paddingTop="7dp"
+            android:paddingBottom="7dp"
+            android:text="@string/login_btn"
+            app:cornerRadius="50dp" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -143,8 +167,12 @@
             android:layout_height="wrap_content"
             android:backgroundTint="@color/white"
             android:drawableLeft="@drawable/icon_google"
+            android:fontFamily="@font/poppins_semibold"
+            android:paddingTop="7dp"
+            android:paddingBottom="7dp"
             android:text="Google"
-            android:textColor="#2E2E2E" />
+            android:textColor="#2E2E2E"
+            app:cornerRadius="50dp" />
     </LinearLayout>
 
     <ImageView

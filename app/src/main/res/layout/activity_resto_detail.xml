@@ -29,17 +29,33 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <EditText
-                android:id="@+id/editTextText2"
+            <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:ems="10"
-                android:hint="@string/search"
-                android:inputType="text"
+                android:layout_marginEnd="24dp"
+                android:background="@drawable/search_background"
+                app:boxBackgroundMode="outline"
+                app:boxCornerRadiusBottomEnd="50dp"
+                app:boxCornerRadiusBottomStart="50dp"
+                app:boxCornerRadiusTopEnd="50dp"
+                app:boxCornerRadiusTopStart="50dp"
+                app:boxStrokeWidth="0dp"
+                app:hintEnabled="false"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/back_btn"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/editTextText2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:backgroundTint="@color/secondary"
+                    android:drawableStart="@drawable/ic_search"
+                    android:hint="@string/search"
+                    android:inputType="text"
+                    android:padding="8dp" />
+            </com.google.android.material.textfield.TextInputLayout>
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <ScrollView
@@ -96,8 +112,8 @@
                         android:id="@+id/resto_name"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Resto Chandra"
-                        android:textStyle="bold" />
+                        android:fontFamily="@font/poppins_medium"
+                        android:text="Resto Chandra" />
 
                     <TextView
                         android:id="@+id/resto_category"
@@ -105,7 +121,7 @@
                         android:layout_height="wrap_content"
                         android:text="Jajanan"
                         android:textColor="#888888"
-                        android:textSize="13sp" />
+                        android:textSize="10sp" />
 
                     <LinearLayout
                         android:id="@+id/rating"
@@ -117,8 +133,8 @@
 
                         <!-- Ikon Bintang -->
                         <ImageView
-                            android:layout_width="16dp"
-                            android:layout_height="16dp"
+                            android:layout_width="14dp"
+                            android:layout_height="14dp"
                             app:srcCompat="@drawable/baseline_star_24" />
 
                         <!-- Nilai Rating -->
@@ -129,7 +145,7 @@
                             android:layout_marginStart="4dp"
                             android:text="4.5"
                             android:textColor="@color/primary"
-                            android:textSize="13sp" />
+                            android:textSize="10sp" />
 
                         <!-- Jumlah Ulasan -->
                         <TextView
@@ -139,7 +155,7 @@
                             android:layout_marginStart="2dp"
                             android:text="(180)"
                             android:textColor="@color/primary"
-                            android:textSize="13sp" />
+                            android:textSize="10sp" />
                     </LinearLayout>
                 </LinearLayout>
 
@@ -159,6 +175,7 @@
                     android:id="@+id/category_product_recycler"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
                     android:padding="12dp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"

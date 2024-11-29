@@ -29,19 +29,34 @@
                 app:layout_constraintTop_toTopOf="parent"
                 tools:src="@drawable/resto_avatar" />
 
-            <EditText
-                android:id="@+id/editTextText"
+            <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="15dp"
                 android:layout_weight="1"
-                android:ems="10"
-                android:hint="@string/search"
-                android:inputType="text"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/logout_btn"
                 app:layout_constraintStart_toEndOf="@+id/avatar"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                app:boxBackgroundMode="outline"
+                app:hintEnabled="false"
+                app:boxStrokeWidth="0dp"
+                app:boxCornerRadiusBottomEnd="50dp"
+                app:boxCornerRadiusBottomStart="50dp"
+                app:boxCornerRadiusTopEnd="50dp"
+                app:boxCornerRadiusTopStart="50dp"
+                android:background="@drawable/search_background">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/editTextText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:drawableStart="@drawable/ic_search"
+                    android:hint="@string/search"
+                    android:padding="8dp"
+                    android:backgroundTint="@color/secondary"
+                    android:inputType="text" />
+            </com.google.android.material.textfield.TextInputLayout>
 
             <ImageButton
                 android:id="@+id/logout_btn"
