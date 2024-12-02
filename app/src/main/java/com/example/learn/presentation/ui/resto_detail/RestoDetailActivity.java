@@ -5,7 +5,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.FrameLayout;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -18,32 +17,33 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.learn.R;
+import com.example.learn.data.dto.resto.CategoryDto;
 import com.example.learn.data.dto.resto.GetProductsDto;
+import com.example.learn.data.dto.resto.ProductDto;
 import com.example.learn.data.dto.resto.ProductsPerCategory;
-import com.example.learn.domain.model.Category;
-import com.example.learn.domain.model.Product;
 import com.example.learn.presentation.adapter.CategoryProductAdapter;
-import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.tabs.TabLayout;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.Arrays;
 
 import dagger.hilt.android.AndroidEntryPoint;
 
 @AndroidEntryPoint
 public class RestoDetailActivity extends AppCompatActivity {
     private RestoDetailViewModel viewModel;
-    private ImageButton backBtn;
-    private ImageView restoAvatar, restoBanner;
-    private TextView restoName, restoCategory, restoRating, restoRatingCount;
+    private View checkoutWrapper, backBtn, checkoutBtn, sheetBtn;
+    private ImageView restoAvatar, restoBanner, sheetProductImg;
+    private TextView restoName, restoCategory, restoRating, restoRatingCount, totalQuantity, totalAmount, sheetProductName, sheetProductDesc, sheetProductSold, sheetProductLike, sheetProductPrice;
     private TabLayout categoryTab;
     private RecyclerView categoryProductRecycler;
     private CategoryProductAdapter categoryProductAdapter;
     private LinearLayoutManager categoryRecyclerLayoutManager;
+    private BottomSheetDialog bottomSheetDialog;
     private boolean isTabClicked = false;
+    private ProductDto selectedProduct = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,6 +60,11 @@ public class RestoDetailActivity extends AppCompatActivity {
         restoRating = findViewById(R.id.resto_rating);
         restoRatingCount = findViewById(R.id.resto_rating_count);
         categoryTab = findViewById(R.id.category_tab);
+
+        checkoutWrapper = findViewById(R.id.checkout_wrapper);
+        checkoutBtn = findViewById(R.id.checkout_btn);
+        totalQuantity = findViewById(R.id.total_quantity);
+        totalAmount = findViewById(R.id.total_amount);
 
 //        Recycler
         categoryProductRecycler = findViewById(R.id.category_product_recycler);
@@ -81,36 +86,51 @@ public class RestoDetailActivity extends AppCompatActivity {
 
         listeners();
         stateObserver();
+        initBottomSheet();
     }
 
     private void listeners() {
         backBtn.setOnClickListener(v -> finish());
         categoryTab.addOnTabSelectedListener(handleSelectCategoryTab());
         categoryProductRecycler.addOnScrollListener(handleOnScrollCategoryRecycler());
+        checkoutBtn.setOnClickListener(v -> {
+            Log.d("CHECKOUT", "clicked");
+        });
     }
 
     private void stateObserver() {
         viewModel.getProducts().observe(this, products -> {
             if (products != null) {
-                for (Category category: products.meta.categories) {
+                for (CategoryDto category: products.meta.categories) {
                     categoryTab.addTab(categoryTab.newTab().setText(category.name));
                 }
 
-                ArrayList<ProductsPerCategory> productCategoryList = new ArrayList<>();
-                Collections.addAll(productCategoryList, products.data);
-                categoryProductAdapter = new CategoryProductAdapter(this, productCategoryList, this::onItemClick);
+                ArrayList<ProductsPerCategory> productCategoryList = new ArrayList<>(Arrays.asList(products.data));
+                categoryProductAdapter = new CategoryProductAdapter(this, viewModel, this::handleBottomSheet);
+                categoryProductAdapter.setProductCategories(productCategoryList);
                 categoryProductRecycler.setAdapter(categoryProductAdapter);
-                Log.d("PRODUCT CATEGORY", "attached");
             }
         });
 
         viewModel.getErrorProductsMsg().observe(this, msg -> {
             Toast.makeText(this, msg, Toast.LENGTH_LONG).show();
         });
+
+        viewModel.getQuantities().observe(this, quantities -> {
+            int totalQuantities = viewModel.getTotalQuantities();
+
+            if (totalQuantities > 0) {
+                totalQuantity.setText(String.valueOf(totalQuantities));
+                totalAmount.setText("Rp " + (new DecimalFormat("#,###")).format(viewModel.getTotalAmount()).replace(",", "."));
+                checkoutWrapper.setVisibility(View.VISIBLE);
+            } else {
+                checkoutWrapper.setVisibility(View.GONE);
+            }
+        });
     }
 
-    public void onItemClick(Product product) {
-        BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(this);
+    private void initBottomSheet() {
+        bottomSheetDialog = new BottomSheetDialog(this);
         View bottomSheetView = LayoutInflater.from(this).inflate(
                 R.layout.bottom_sheet_layout,
                 null
@@ -126,19 +146,34 @@ public class RestoDetailActivity extends AppCompatActivity {
             }
         });
 
-        ImageView sheetProductImg = bottomSheetView.findViewById(R.id.sheet_product_img);
-        TextView sheetProductName = bottomSheetView.findViewById(R.id.sheet_product_name);
-        TextView sheetProductSold = bottomSheetView.findViewById(R.id.sheet_product_sold);
-        TextView sheetProductLike = bottomSheetView.findViewById(R.id.sheet_product_like);
-        TextView sheetProductPrice = bottomSheetView.findViewById(R.id.sheet_product_price);
-        TextView sheetProductDesc = bottomSheetView.findViewById(R.id.sheet_product_desc);
+        sheetProductImg = bottomSheetView.findViewById(R.id.sheet_product_img);
+        sheetProductName = bottomSheetView.findViewById(R.id.sheet_product_name);
+        sheetProductSold = bottomSheetView.findViewById(R.id.sheet_product_sold);
+        sheetProductLike = bottomSheetView.findViewById(R.id.sheet_product_like);
+        sheetProductPrice = bottomSheetView.findViewById(R.id.sheet_product_price);
+        sheetProductDesc = bottomSheetView.findViewById(R.id.sheet_product_desc);
+        sheetBtn = bottomSheetView.findViewById(R.id.sheet_add_btn);
 
+        sheetBtn.setOnClickListener(v -> {
+            if(selectedProduct != null) {
+                int currentQty = viewModel.getQuantities().getValue().getOrDefault(selectedProduct.id, 0);
+                if (currentQty < selectedProduct.stock) {
+                    viewModel.updateQuantity(selectedProduct.id, currentQty + 1);
+                    selectedProduct = null;
+                    bottomSheetDialog.hide();
+                }
+            }
+        });
+    }
+
+    public void handleBottomSheet(ProductDto product) {
         Glide.with(this).load(product.image).into(sheetProductImg);
         sheetProductName.setText(product.name);
         sheetProductSold.setText(String.valueOf(product.sold));
         sheetProductLike.setText(String.valueOf(product.like));
         sheetProductPrice.setText("Rp " + (new DecimalFormat("#,###")).format(product.price).replace(",", "."));
         sheetProductDesc.setText(product.description);
+        selectedProduct = product;
 
         bottomSheetDialog.show();
     }

@@ -1,35 +1,43 @@
 package com.example.learn.presentation.adapter;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.learn.R;
+import com.example.learn.data.dto.resto.ProductDto;
 import com.example.learn.data.dto.resto.ProductsPerCategory;
-import com.example.learn.domain.model.Product;
 
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.Arrays;
 import java.util.List;
 
 public class CategoryProductAdapter extends RecyclerView.Adapter<CategoryProductAdapter.CategoryProductViewHolder> {
-    private final List<ProductsPerCategory> productCategories;
     private final Context context;
-    ProductAdapter.OnClickProduct onClickProduct;
+    private final ProductAdapter.QuantitiesViewModel viewModel;
+    private final ProductAdapter.OnClickProduct onClickProduct;
+    private List<ProductsPerCategory> productCategories;
 
-    public CategoryProductAdapter(Context context, List<ProductsPerCategory> productCategories, ProductAdapter.OnClickProduct onClickProduct) {
+    public CategoryProductAdapter(Context context, ProductAdapter.QuantitiesViewModel viewModel, ProductAdapter.OnClickProduct onClickProduct) {
         this.context = context;
-        this.productCategories = productCategories;
+        this.viewModel = viewModel;
         this.onClickProduct = onClickProduct;
     }
 
+    public void setProductCategories(List<ProductsPerCategory> productCategories) {
+        this.productCategories = productCategories;
+
+        notifyDataSetChanged();
+    }
+
+    @NonNull
     @Override
     public CategoryProductViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
@@ -46,11 +54,10 @@ public class CategoryProductAdapter extends RecyclerView.Adapter<CategoryProduct
         ProductsPerCategory productCategory = productCategories.get(position);
         holder.categoryName.setText(productCategory.category.name);
 
-        ArrayList<Product> productList = new ArrayList<>();
-        Collections.addAll(productList, productCategory.data);
+        ArrayList<ProductDto> productList = new ArrayList<>(Arrays.asList(productCategory.data));
 
-        ProductAdapter productAdapter = new ProductAdapter();
-        productAdapter.setProducts(productList, onClickProduct, context);
+        ProductAdapter productAdapter = new ProductAdapter(context, viewModel, onClickProduct);
+        productAdapter.setProducts(productList);
 
         holder.productRecycler.setAdapter(productAdapter);
     }

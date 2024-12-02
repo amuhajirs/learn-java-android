@@ -1,8 +1,8 @@
-package com.example.learn.domain.model;
+package com.example.learn.data.dto.resto;
 
 import com.google.gson.annotations.SerializedName;
 
-public class Product {
+public class ProductDto {
     public int id;
     @SerializedName("restaurant_id")
     public int restaurantId;
@@ -24,4 +24,8 @@ public class Product {
     public String createdAt;
     @SerializedName("updated_at")
     public String updatedAt;
+
+//    public Product toProduct() {
+//        return new Product(id, name, description, image, price, stock, sold, like, dislike, isLiked, 0);
+//    }
 }

@@ -1,7 +1,5 @@
 package com.example.learn.data.dto.auth;
 
-import com.example.learn.domain.model.Token;
-import com.example.learn.domain.model.User;
 import com.google.gson.annotations.SerializedName;
 
 public class LoginDto {
@@ -19,9 +17,9 @@ public class LoginDto {
     }
 
     public static class Response {
-        public User data;
+        public UserDto data;
         public String message;
         public String status;
-        public Token token;
+        public TokenDto token;
     }
 }

@@ -4,36 +4,42 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
-import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.lifecycle.LifecycleOwner;
+import androidx.lifecycle.LiveData;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.RequestOptions;
-import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 
 import com.example.learn.R;
-import com.example.learn.domain.model.Category;
-import com.example.learn.domain.model.Product;
-import com.google.android.material.bottomsheet.BottomSheetDialog;
+import com.example.learn.data.dto.resto.ProductDto;
 
 import java.text.DecimalFormat;
 import java.util.List;
+import java.util.Map;
 
 public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductViewHolder> {
-    private List<Product> products;
-    OnClickProduct onClickProduct;
-    Context context;
+    private final Context context;
+    private final QuantitiesViewModel viewModel;
+    private final OnClickProduct onClickProduct;
+    private List<ProductDto> products;
 
-    public void setProducts(List<Product> products, OnClickProduct onClickProduct, Context context) {
-        this.products = products;
-        this.onClickProduct = onClickProduct;
+    public ProductAdapter(Context context, QuantitiesViewModel viewModel, OnClickProduct onClickProduct) {
         this.context = context;
+        this.viewModel = viewModel;
+        this.onClickProduct = onClickProduct;
+    }
+
+    public void setProducts(List<ProductDto> products) {
+        this.products = products;
+
         notifyDataSetChanged();
     }
 
@@ -51,7 +57,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
             return;
         }
 
-        Product product = products.get(position);
+        ProductDto product = products.get(position);
 
         Glide.with(holder.productImage.getContext())
                 .load(product.image)
@@ -60,6 +66,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
         holder.productPrice.setText("Rp " + (new DecimalFormat("#,###")).format(product.price).replace(",", "."));
         holder.productSold.setText(String.valueOf(product.sold));
         holder.productLike.setText(String.valueOf(product.like));
+        holder.quantity.setText(viewModel.getQuantities().getValue().getOrDefault(product.id, 0).toString());
 
         if(product.stock == 0) {
             holder.btnProduct.setVisibility(View.GONE);
@@ -68,6 +75,27 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
 
         holder.cardProduct.setOnClickListener(v -> {
             onClickProduct.onItemClick(product);
+        });
+
+        viewModel.getQuantities().observe((LifecycleOwner) context, quantities -> {
+            int currentQty = quantities.getOrDefault(product.id, 0);
+            holder.quantity.setText(String.valueOf(currentQty));
+        });
+
+        holder.incBtn.setOnClickListener(v -> {
+            int currentQty = viewModel.getQuantities().getValue().getOrDefault(product.id, 0);
+            if (currentQty < product.stock) {
+                viewModel.updateQuantity(product.id, currentQty + 1);
+            } else {
+                Toast.makeText(context, "Stok tidak cukup", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        holder.decBtn.setOnClickListener(v -> {
+            int currentQty = viewModel.getQuantities().getValue().getOrDefault(product.id, 0);
+            if (currentQty > 0) {
+                viewModel.updateQuantity(product.id, currentQty - 1);
+            }
         });
     }
 
@@ -81,12 +109,14 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
 
     public static class ProductViewHolder extends RecyclerView.ViewHolder {
         ImageView productImage;
-        TextView productName, productPrice, productSold, productLike, emptyStock;
+        TextView productName, productPrice, productSold, productLike, emptyStock, quantity;
         LinearLayout btnProduct;
         CardView cardProduct;
+        ImageButton incBtn, decBtn;
 
         public ProductViewHolder(@NonNull View itemView) {
             super(itemView);
+
             productImage = itemView.findViewById(R.id.product_img);
             productName = itemView.findViewById(R.id.product_name);
             productPrice = itemView.findViewById(R.id.product_price);
@@ -94,11 +124,19 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
             productLike = itemView.findViewById(R.id.product_like);
             emptyStock = itemView.findViewById(R.id.empty_stock);
             btnProduct = itemView.findViewById(R.id.btn_product);
+            incBtn = itemView.findViewById(R.id.inc_btn);
+            decBtn = itemView.findViewById(R.id.dec_btn);
+            quantity = itemView.findViewById(R.id.quantity);
             cardProduct = (CardView) itemView;
         }
     }
 
     public interface OnClickProduct {
-        public void onItemClick(Product product);
+        public void onItemClick(ProductDto product);
+    }
+
+    public interface QuantitiesViewModel {
+        public LiveData<Map<Integer, Integer>> getQuantities();
+        void updateQuantity(int productId, int quantity);
     }
 }

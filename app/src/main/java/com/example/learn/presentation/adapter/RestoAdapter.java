@@ -14,22 +14,22 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.learn.R;
-import com.example.learn.domain.model.Category;
-import com.example.learn.domain.model.Restaurant;
+import com.example.learn.data.dto.resto.CategoryDto;
+import com.example.learn.data.dto.resto.RestaurantDto;
 import com.example.learn.presentation.ui.resto_detail.RestoDetailActivity;
 
 import java.util.List;
 
 public class RestoAdapter extends RecyclerView.Adapter<RestoAdapter.RestoViewHolder> {
-    private List<Restaurant> restos;
-    private Category category;
-    private Context context;
+    private List<RestaurantDto> restos;
+    private CategoryDto category;
+    private final Context context;
 
     public RestoAdapter(Context context) {
         this.context = context;
     }
 
-    public void setRestos(List<Restaurant> restos, Category category) {
+    public void setRestos(List<RestaurantDto> restos, CategoryDto category) {
         this.restos = restos;
         this.category = category;
         notifyDataSetChanged();
@@ -49,7 +49,7 @@ public class RestoAdapter extends RecyclerView.Adapter<RestoAdapter.RestoViewHol
             return;
         }
 
-        Restaurant resto = restos.get(position);
+        RestaurantDto resto = restos.get(position);
 
         Glide.with(holder.restoImage.getContext()).load(resto.avatar).into(holder.restoImage);
 

@@ -12,11 +12,11 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.learn.R;
+import com.example.learn.data.dto.resto.RestaurantDto;
 import com.example.learn.data.dto.resto.RestaurantsPerCategory;
-import com.example.learn.domain.model.Restaurant;
 
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.Arrays;
 import java.util.List;
 
 public class CategoryRestoAdapter extends RecyclerView.Adapter<CategoryRestoAdapter.CategoryRestoViewHolder> {
@@ -45,8 +45,7 @@ public class CategoryRestoAdapter extends RecyclerView.Adapter<CategoryRestoAdap
         RestaurantsPerCategory restoCategory = restoCategories.get(position);
         holder.categoryName.setText(restoCategory.category.name);
 
-        ArrayList<Restaurant> restoList = new ArrayList<>();
-        Collections.addAll(restoList, restoCategory.data);
+        ArrayList<RestaurantDto> restoList = new ArrayList<>(Arrays.asList(restoCategory.data));
 
         RestoAdapter restoAdapter = new RestoAdapter(context);
         restoAdapter.setRestos(restoList, restoCategory.category);

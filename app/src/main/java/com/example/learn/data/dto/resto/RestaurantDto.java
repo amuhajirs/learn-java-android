@@ -1,8 +1,8 @@
-package com.example.learn.domain.model;
+package com.example.learn.data.dto.resto;
 
 import com.google.gson.annotations.SerializedName;
 
-public class Restaurant {
+public class RestaurantDto {
     public int id;
     public String name;
     public String avatar;
@@ -27,4 +27,8 @@ public class Restaurant {
 
     @SerializedName("created_at")
     public String createdAt;
+
+//    public Restaurant toRestaurant() {
+//        return new Restaurant(id, name, avatar, banner,isOpen, ratingAvg, ratingCount);
+//    }
 }

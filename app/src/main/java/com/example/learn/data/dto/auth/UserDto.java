@@ -1,8 +1,8 @@
-package com.example.learn.domain.model;
+package com.example.learn.data.dto.auth;
 
 import com.google.gson.annotations.SerializedName;
 
-public class User {
+public class UserDto {
     public int id;
     public String name;
     public String email;
@@ -20,5 +20,5 @@ public class User {
     @SerializedName("created_at")
     public String createdAt;
 
-    public Wallet wallet;
+    public WalletDto wallet;
 }
