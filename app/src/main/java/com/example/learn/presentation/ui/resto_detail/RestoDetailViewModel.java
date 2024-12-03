@@ -11,12 +11,17 @@ import com.example.learn.data.dto.ErrorDto;
 import com.example.learn.data.dto.resto.GetProductsDto;
 import com.example.learn.data.dto.resto.ProductDto;
 import com.example.learn.data.dto.resto.ProductsPerCategory;
+import com.example.learn.data.dto.trx.CreateCartDto;
+import com.example.learn.data.dto.trx.CreateOrderDto;
+import com.example.learn.domain.usecase.CreateOrderUseCase;
 import com.example.learn.domain.usecase.GetProductsUseCase;
 import com.example.learn.helper.utils.Resource;
 import com.example.learn.presentation.adapter.ProductAdapter;
 import com.google.gson.Gson;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.inject.Inject;
@@ -29,14 +34,17 @@ import retrofit2.Response;
 @HiltViewModel
 public class RestoDetailViewModel extends ViewModel implements ProductAdapter.QuantitiesViewModel {
     private final GetProductsUseCase getProductsUseCase;
+    private final CreateOrderUseCase createOrderUseCase;
     private final int restaurantId;
 
     private final MutableLiveData<Resource<GetProductsDto.Response>> productsState = new MutableLiveData<>();
     private final MutableLiveData<Map<Integer, Integer>> productQuantities = new MutableLiveData<>(new HashMap<>());
+    private final MutableLiveData<Resource<CreateOrderDto.Response>> checkoutState = new MutableLiveData<>();
 
     @Inject
-    public RestoDetailViewModel(GetProductsUseCase getProductsUseCase, SavedStateHandle savedStateHandle) {
+    public RestoDetailViewModel(GetProductsUseCase getProductsUseCase, CreateOrderUseCase createOrderUseCase, SavedStateHandle savedStateHandle) {
         this.getProductsUseCase = getProductsUseCase;
+        this.createOrderUseCase = createOrderUseCase;
         this.restaurantId = Integer.parseInt(savedStateHandle.get("id"));
     }
 
@@ -45,6 +53,10 @@ public class RestoDetailViewModel extends ViewModel implements ProductAdapter.Qu
             fetchProducts();
         }
         return productsState;
+    }
+
+    public LiveData<Resource<CreateOrderDto.Response>> getCheckoutState() {
+        return checkoutState;
     }
 
     @Override
@@ -117,6 +129,23 @@ public class RestoDetailViewModel extends ViewModel implements ProductAdapter.Qu
                 productsState.postValue(Resource.error(t.toString()));
                 Log.e("UNKNOWN GET PRODUCTS ERROR", t.toString());
             }
+        });
+    }
+
+    public void fetchCheckout() {
+        checkoutState.setValue(Resource.loading());
+        List<CreateCartDto.Body> body = new ArrayList<>();
+
+        productQuantities.getValue().forEach((key, value) -> {
+            body.add(new CreateCartDto.Body(key, value));
+        });
+
+        createOrderUseCase.executeAsync(body.toArray(new CreateCartDto.Body[0])).thenAccept(response -> {
+            productQuantities.postValue(new HashMap<>());
+            checkoutState.postValue(Resource.success(response));
+        }).exceptionally(throwable -> {
+            checkoutState.postValue(Resource.error(throwable.getMessage()));
+            return null;
         });
     }
 }

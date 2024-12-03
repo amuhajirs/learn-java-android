@@ -99,9 +99,7 @@ public class RestoDetailActivity extends AppCompatActivity {
 
     private void listeners() {
         swipeRefreshLayout.setOnRefreshListener(() -> viewModel.fetchProducts());
-        checkoutBtn.setOnClickListener(v -> {
-            Log.d("CHECKOUT", "clicked");
-        });
+        checkoutBtn.setOnClickListener(v -> viewModel.fetchCheckout());
     }
 
     private void stateObserver() {
@@ -138,6 +136,21 @@ public class RestoDetailActivity extends AppCompatActivity {
                 checkoutWrapper.setVisibility(View.VISIBLE);
             } else {
                 checkoutWrapper.setVisibility(View.GONE);
+            }
+        });
+
+        viewModel.getCheckoutState().observe(this, checkoutState -> {
+            switch (checkoutState.getStatus()) {
+                case SUCCESS:
+                    checkoutBtn.setActivated(true);
+                    Toast.makeText(this, checkoutState.getData().message, Toast.LENGTH_LONG).show();
+                    break;
+                case ERROR:
+                    checkoutBtn.setActivated(true);
+                    Toast.makeText(this, checkoutState.getMessage(), Toast.LENGTH_LONG).show();
+                    break;
+                case LOADING:
+                    checkoutBtn.setActivated(false);
             }
         });
     }
