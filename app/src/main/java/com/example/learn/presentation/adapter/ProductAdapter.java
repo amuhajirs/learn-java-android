@@ -20,6 +20,7 @@ import com.bumptech.glide.Glide;
 
 import com.example.learn.R;
 import com.example.learn.data.dto.resto.ProductDto;
+import com.example.learn.helper.constant.ViewConst;
 
 import java.text.DecimalFormat;
 import java.util.List;
@@ -30,6 +31,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
     private final QuantitiesViewModel viewModel;
     private final OnClickProduct onClickProduct;
     private List<ProductDto> products;
+    private boolean isLoading = true;
 
     public ProductAdapter(Context context, QuantitiesViewModel viewModel, OnClickProduct onClickProduct) {
         this.context = context;
@@ -37,22 +39,43 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
         this.onClickProduct = onClickProduct;
     }
 
+    public void setLoading(boolean isLoading) {
+        this.isLoading = isLoading;
+        notifyDataSetChanged();
+    }
+
     public void setProducts(List<ProductDto> products) {
         this.products = products;
+        this.isLoading = false;
 
         notifyDataSetChanged();
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        return isLoading ? ViewConst.VIEW_TYPE_SKELETON : ViewConst.VIEW_TYPE_DATA;
     }
 
     @NonNull
     @Override
     public ProductViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.card_product, parent, false);
-        return new ProductViewHolder(view);
+        if(viewType == ViewConst.VIEW_TYPE_SKELETON) {
+            View view = LayoutInflater.from(parent.getContext())
+                    .inflate(R.layout.skeleton_card_product, parent, false);
+            return new ProductViewHolder(view, viewType);
+        } else {
+            View view = LayoutInflater.from(parent.getContext())
+                    .inflate(R.layout.card_product, parent, false);
+            return new ProductViewHolder(view, viewType);
+        }
     }
 
     @Override
     public void onBindViewHolder(@NonNull ProductViewHolder holder, int position) {
+        if (isLoading) {
+            return;
+        }
+
         if (products == null) {
             return;
         }
@@ -61,6 +84,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
 
         Glide.with(holder.productImage.getContext())
                 .load(product.image)
+                .placeholder(R.drawable.img_placeholder)
                 .into(holder.productImage);
         holder.productName.setText(product.name);
         holder.productPrice.setText("Rp " + (new DecimalFormat("#,###")).format(product.price).replace(",", "."));
@@ -101,6 +125,10 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
 
     @Override
     public int getItemCount() {
+        if(isLoading) {
+            return 3;
+        }
+
         if (products == null) {
             return 0;
         }
@@ -114,8 +142,12 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
         CardView cardProduct;
         ImageButton incBtn, decBtn;
 
-        public ProductViewHolder(@NonNull View itemView) {
+        public ProductViewHolder(@NonNull View itemView, int viewType) {
             super(itemView);
+
+            if(viewType == ViewConst.VIEW_TYPE_SKELETON) {
+                return;
+            }
 
             productImage = itemView.findViewById(R.id.product_img);
             productName = itemView.findViewById(R.id.product_name);

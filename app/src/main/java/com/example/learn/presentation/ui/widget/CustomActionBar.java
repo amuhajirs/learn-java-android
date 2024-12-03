@@ -1,5 +1,6 @@
 package com.example.learn.presentation.ui.widget;
 
+import android.app.Activity;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
@@ -28,6 +29,12 @@ public class CustomActionBar extends ConstraintLayout {
     private void init(Context context) {
         LayoutInflater.from(context).inflate(R.layout.custom_action_bar, this, true);
         backButton = findViewById(R.id.back_btn);
+
+        backButton.setOnClickListener(v -> {
+            if (context instanceof Activity) {
+                ((Activity) context).finish();
+            }
+        });
     }
 
     public ImageButton getBackButton() {

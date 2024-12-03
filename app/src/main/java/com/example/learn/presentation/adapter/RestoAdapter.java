@@ -16,42 +16,68 @@ import com.bumptech.glide.Glide;
 import com.example.learn.R;
 import com.example.learn.data.dto.resto.CategoryDto;
 import com.example.learn.data.dto.resto.RestaurantDto;
+import com.example.learn.helper.constant.ViewConst;
 import com.example.learn.presentation.ui.resto_detail.RestoDetailActivity;
 
 import java.util.List;
 
 public class RestoAdapter extends RecyclerView.Adapter<RestoAdapter.RestoViewHolder> {
+    private final Context context;
     private List<RestaurantDto> restos;
     private CategoryDto category;
-    private final Context context;
+    private boolean isLoading = true;
 
     public RestoAdapter(Context context) {
         this.context = context;
     }
 
+    public void setLoading(boolean isLoading) {
+        this.isLoading = isLoading;
+        notifyDataSetChanged();
+    }
+
     public void setRestos(List<RestaurantDto> restos, CategoryDto category) {
         this.restos = restos;
         this.category = category;
+        this.isLoading = false;
         notifyDataSetChanged();
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        return isLoading ? ViewConst.VIEW_TYPE_SKELETON  : ViewConst.VIEW_TYPE_DATA;
     }
 
     @NonNull
     @Override
     public RestoViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.card_resto, parent, false);
-        return new RestoViewHolder(view);
+        if(viewType == ViewConst.VIEW_TYPE_SKELETON ) {
+            View view = LayoutInflater.from(parent.getContext())
+                    .inflate(R.layout.skeleton_card_resto, parent, false);
+            return new RestoViewHolder(view, viewType);
+        } else {
+            View view = LayoutInflater.from(parent.getContext())
+                    .inflate(R.layout.card_resto, parent, false);
+            return new RestoViewHolder(view, viewType);
+        }
     }
 
     @Override
     public void onBindViewHolder(@NonNull RestoViewHolder holder, int position) {
+        if(isLoading) {
+            return;
+        }
+
         if (restos == null) {
             return;
         }
 
         RestaurantDto resto = restos.get(position);
 
-        Glide.with(holder.restoImage.getContext()).load(resto.avatar).into(holder.restoImage);
+        Glide.with(holder.restoImage.getContext())
+            .load(resto.avatar)
+            .placeholder(R.drawable.img_placeholder)
+            .into(holder.restoImage);
 
         holder.restoName.setText(resto.name);
         holder.restoCategory.setText(category.name);
@@ -73,6 +99,10 @@ public class RestoAdapter extends RecyclerView.Adapter<RestoAdapter.RestoViewHol
 
     @Override
     public int getItemCount() {
+        if(isLoading) {
+            return 2;
+        }
+
         if (restos == null) {
             return 0;
         }
@@ -84,8 +114,12 @@ public class RestoAdapter extends RecyclerView.Adapter<RestoAdapter.RestoViewHol
         ImageView restoImage;
         CardView cardResto;
 
-        public RestoViewHolder(@NonNull View itemView) {
+        public RestoViewHolder(@NonNull View itemView, int viewType) {
             super(itemView);
+            if(viewType == ViewConst.VIEW_TYPE_SKELETON) {
+                return;
+            }
+
             restoImage = itemView.findViewById(R.id.resto_avatar);
             restoName = itemView.findViewById(R.id.resto_name);
             restoCategory = itemView.findViewById(R.id.resto_category);

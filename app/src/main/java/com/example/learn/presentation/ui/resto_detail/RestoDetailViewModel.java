@@ -12,6 +12,7 @@ import com.example.learn.data.dto.resto.GetProductsDto;
 import com.example.learn.data.dto.resto.ProductDto;
 import com.example.learn.data.dto.resto.ProductsPerCategory;
 import com.example.learn.domain.usecase.GetProductsUseCase;
+import com.example.learn.helper.utils.Resource;
 import com.example.learn.presentation.adapter.ProductAdapter;
 import com.google.gson.Gson;
 
@@ -30,8 +31,7 @@ public class RestoDetailViewModel extends ViewModel implements ProductAdapter.Qu
     private final GetProductsUseCase getProductsUseCase;
     private final int restaurantId;
 
-    private final MutableLiveData<GetProductsDto.Response> products = new MutableLiveData<>();
-    private final MutableLiveData<String> errorGetProductsMsg = new MutableLiveData<>();
+    private final MutableLiveData<Resource<GetProductsDto.Response>> productsState = new MutableLiveData<>();
     private final MutableLiveData<Map<Integer, Integer>> productQuantities = new MutableLiveData<>(new HashMap<>());
 
     @Inject
@@ -40,15 +40,11 @@ public class RestoDetailViewModel extends ViewModel implements ProductAdapter.Qu
         this.restaurantId = Integer.parseInt(savedStateHandle.get("id"));
     }
 
-    public MutableLiveData<String> getErrorProductsMsg() {
-        return errorGetProductsMsg;
-    }
-
-    public LiveData<GetProductsDto.Response> getProducts() {
-        if (products.getValue() == null) {
+    public LiveData<Resource<GetProductsDto.Response>> getProducts() {
+        if (productsState.getValue() == null) {
             fetchProducts();
         }
-        return products;
+        return productsState;
     }
 
     @Override
@@ -79,7 +75,7 @@ public class RestoDetailViewModel extends ViewModel implements ProductAdapter.Qu
     public int getTotalAmount() {
         int total = 0;
         Map<Integer, Integer> currentQuantities = productQuantities.getValue();
-        ProductsPerCategory[] productCategories = products.getValue().data;
+        ProductsPerCategory[] productCategories = productsState.getValue().getData().data;
 
         if (currentQuantities != null) {
             for (ProductsPerCategory productCategory: productCategories) {
@@ -95,27 +91,30 @@ public class RestoDetailViewModel extends ViewModel implements ProductAdapter.Qu
         return total;
     }
 
-    private void fetchProducts() {
+    public void fetchProducts() {
+        productsState.setValue(Resource.loading());
+
         getProductsUseCase.execute(restaurantId, new Callback<GetProductsDto.Response>() {
             @Override
             public void onResponse(Call<GetProductsDto.Response> call, Response<GetProductsDto.Response> response) {
                 if(response.isSuccessful()) {
-                    products.postValue(response.body());
+                    productsState.postValue(Resource.success(response.body()));
                 } else {
                     try {
                         assert response.errorBody() != null;
                         String errorBody = response.errorBody().string();
                         ErrorDto errorResponse = new Gson().fromJson(errorBody, ErrorDto.class);
-                        errorGetProductsMsg.postValue(errorResponse.message);
+                        productsState.postValue(Resource.error(errorResponse.message));
                     } catch (Throwable e) {
                         Log.e("UNKNOWN GET PRODUCTS ERROR", e.toString());
-                        errorGetProductsMsg.postValue("Gagal menerima data produk");
+                        productsState.postValue(Resource.error(e.toString()));
                     }
                 }
             }
 
             @Override
             public void onFailure(Call<GetProductsDto.Response> call, Throwable t) {
+                productsState.postValue(Resource.error(t.toString()));
                 Log.e("UNKNOWN GET PRODUCTS ERROR", t.toString());
             }
         });

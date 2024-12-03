@@ -12,10 +12,12 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.appcompat.widget.PopupMenu;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.bumptech.glide.Glide;
 import com.example.learn.R;
@@ -40,6 +42,7 @@ public class HomeFragment extends Fragment {
     private ImageView avatarEl;
     private RecyclerView categoryRestoRecycler;
     private CategoryRestoAdapter categoryRestoAdapter;
+    private SwipeRefreshLayout swipeRefreshLayout;
 
     public HomeFragment() {
     }
@@ -52,15 +55,22 @@ public class HomeFragment extends Fragment {
         btnLogoutEl = view.findViewById(R.id.logout_btn);
         avatarEl = view.findViewById(R.id.avatar);
         categoryRestoRecycler = view.findViewById(R.id.category_resto_recycler);
+        swipeRefreshLayout = view.findViewById(R.id.refresh);
+
+        swipeRefreshLayout.setColorSchemeColors(ContextCompat.getColor(requireContext(), R.color.primary));
 
         String avatar = DataStoreSingleton.getInstance().getValueSync(DatastoreConst.USER_AVATAR);
         Glide.with(this)
             .load(avatar)
             .circleCrop()
+            .placeholder(R.drawable.img_placeholder)
             .into(avatarEl);
 
         categoryRestoRecycler.setLayoutManager(new LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false));
         categoryRestoRecycler.setNestedScrollingEnabled(false);
+
+        categoryRestoAdapter = new CategoryRestoAdapter(requireContext());
+        categoryRestoRecycler.setAdapter(categoryRestoAdapter);
 
         listeners();
         stateObserver();
@@ -68,12 +78,13 @@ public class HomeFragment extends Fragment {
         return view;
     }
 
-    public void listeners() {
+    private void listeners() {
         btnLogoutEl.setOnClickListener(this::handleLogout);
         avatarEl.setOnClickListener(this::handleClickAvatar);
+        swipeRefreshLayout.setOnRefreshListener(() -> viewModel.fetchRestos());
     }
 
-    public void stateObserver() {
+    private void stateObserver() {
         viewModel.getLogoutSuccessMsg().observe(getViewLifecycleOwner(), msg -> {
             DataStoreSingleton.getInstance().saveValue(DatastoreConst.ACC_TOKEN, "");
             Toast.makeText(requireContext(), msg, Toast.LENGTH_LONG).show();
@@ -87,36 +98,36 @@ public class HomeFragment extends Fragment {
             getActivity().finish();
         });
 
-        viewModel.getRestos().observe(getViewLifecycleOwner(), restos -> {
-            if (restos != null) {
-                ArrayList<RestaurantsPerCategory> restoCategoryList = new ArrayList<>();
-                Collections.addAll(restoCategoryList, restos.data);
-                categoryRestoAdapter = new CategoryRestoAdapter(requireContext(), restoCategoryList);
-                categoryRestoRecycler.setAdapter(categoryRestoAdapter);
+        viewModel.getRestosState().observe(getViewLifecycleOwner(), restosState -> {
+            switch (restosState.getStatus()) {
+                case LOADING:
+                    categoryRestoAdapter.setLoading(true);
+                    break;
+                case SUCCESS:
+                    ArrayList<RestaurantsPerCategory> restoCategoryList = new ArrayList<>();
+                    Collections.addAll(restoCategoryList, restosState.getData().data);
+                    categoryRestoAdapter.setRestoCategories(restoCategoryList);
+                    swipeRefreshLayout.setRefreshing(false);
+                    break;
+                case ERROR:
+                    Toast.makeText(requireContext(), restosState.getMessage(), Toast.LENGTH_LONG).show();
+                    swipeRefreshLayout.setRefreshing(false);
+                    break;
             }
-        });
-
-        viewModel.getErrorMsgGetResto().observe(getViewLifecycleOwner(), msg -> {
-            Toast.makeText(requireContext(), msg, Toast.LENGTH_LONG).show();
         });
     }
 
-    public void handleLogout(View v) {
+    private void handleLogout(View v) {
         v.setEnabled(false);
 
         viewModel.logout();
     }
 
-    public void handleClickAvatar(View v) {
+    private void handleClickAvatar(View v) {
         PopupMenu popupMenu = new PopupMenu(requireContext(), v);
-
-        // Inflate the menu resource
         popupMenu.getMenuInflater().inflate(R.menu.user_option_menu, popupMenu.getMenu());
 
-        // Set menu item click listener
         popupMenu.setOnMenuItemClickListener(this::handleMenuItemClick);
-
-        // Show the PopupMenu
         popupMenu.show();
     }
 

@@ -15,6 +15,7 @@ import com.example.learn.domain.usecase.GetRestosUseCase;
 import com.example.learn.domain.usecase.LogoutUseCase;
 import com.example.learn.helper.constant.DatastoreConst;
 import com.example.learn.helper.utils.DataStoreSingleton;
+import com.example.learn.helper.utils.Resource;
 import com.example.learn.presentation.ui.login.LoginActivity;
 import com.google.gson.Gson;
 
@@ -32,8 +33,7 @@ public class HomeViewModel extends ViewModel {
     private final LogoutUseCase logoutUseCase;
     private final MutableLiveData<String> logoutSuccessMsg = new MutableLiveData<>();
     private final MutableLiveData<String> logoutErrorMsg = new MutableLiveData<>();
-    private final MutableLiveData<GetRestosDto.Response> restos = new MutableLiveData<>();
-    private final MutableLiveData<String> errorMsgGetResto = new MutableLiveData<>();
+    private final MutableLiveData<Resource<GetRestosDto.Response>> restosState = new MutableLiveData<>();
 
     @Inject
     public HomeViewModel(GetRestosUseCase getRestosUseCase, LogoutUseCase logoutUseCase) {
@@ -49,15 +49,11 @@ public class HomeViewModel extends ViewModel {
         return logoutErrorMsg;
     }
 
-    public LiveData<String> getErrorMsgGetResto() {
-        return errorMsgGetResto;
-    }
-
-    public LiveData<GetRestosDto.Response> getRestos() {
-        if (restos.getValue() == null) {
+    public LiveData<Resource<GetRestosDto.Response>> getRestosState() {
+        if (restosState.getValue() == null) {
             fetchRestos();
         }
-        return restos;
+        return restosState;
     }
 
     public void logout() {
@@ -91,21 +87,23 @@ public class HomeViewModel extends ViewModel {
         });
     }
 
-    private void fetchRestos() {
+    public void fetchRestos() {
+        restosState.setValue(Resource.loading());
+
         getRestosUseCase.execute(new Callback<GetRestosDto.Response>() {
             @Override
             public void onResponse(Call<GetRestosDto.Response> call, Response<GetRestosDto.Response> response) {
                 if (response.isSuccessful()) {
-                    restos.postValue(response.body());
+                    restosState.postValue(Resource.success(response.body()));
                 } else {
                     try {
                         assert response.errorBody() != null;
                         String errorBody = response.errorBody().string();
                         ErrorDto errorResponse = new Gson().fromJson(errorBody, ErrorDto.class);
-                        errorMsgGetResto.postValue(errorResponse.message);
+                        restosState.postValue(Resource.error(errorResponse.message));
                     } catch (Exception e) {
                         Log.e("UNKNOWN GET RESTO ERROR", e.toString());
-                        errorMsgGetResto.postValue("Gagal mendapatkan data restoran");
+                        restosState.postValue(Resource.error("Gagal mendapatkan data restoran"));
                     }
                 }
             }
@@ -113,7 +111,7 @@ public class HomeViewModel extends ViewModel {
             @Override
             public void onFailure(Call<GetRestosDto.Response> call, Throwable t) {
                 Log.e("UNKNOWN GET RESTO ERROR", t.toString());
-                errorMsgGetResto.postValue("Gagal mendapatkan data restoran");
+                restosState.postValue(Resource.error("Gagal mendapatkan data restoran"));
             }
         });
     }

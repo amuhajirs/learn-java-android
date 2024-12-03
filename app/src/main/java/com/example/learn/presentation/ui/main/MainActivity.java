@@ -10,6 +10,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.example.learn.R;
+import com.example.learn.presentation.interfaces.OnFragmentActionListener;
 import com.example.learn.presentation.ui.home.HomeFragment;
 import com.example.learn.presentation.ui.transaction.TrxFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -18,8 +19,9 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import dagger.hilt.android.AndroidEntryPoint;
 
 @AndroidEntryPoint
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements OnFragmentActionListener {
     private BottomNavigationView bottomNavigationView;
+    private Fragment homeFragment, trxFragment, activeFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,6 +33,8 @@ public class MainActivity extends AppCompatActivity {
 
         fab.setImageTintList(ContextCompat.getColorStateList(this, R.color.white));
         bottomNavigationView.setBackground(null);
+        homeFragment = getSupportFragmentManager().findFragmentById(R.id.fragmentContainerView);
+        activeFragment = homeFragment;
 
         listeners();
     }
@@ -41,26 +45,36 @@ public class MainActivity extends AppCompatActivity {
 
     public boolean handleBottomNav(MenuItem item) {
         int itemId = item.getItemId();
+
         if (itemId == R.id.nav_home) {
-            replaceFragment(new HomeFragment());
+            switchFragment(homeFragment);
+            return true;
         } else if (itemId == R.id.nav_transaction) {
-            replaceFragment(new TrxFragment());
-        } else {
-            return false;
+            if(trxFragment == null) {
+                trxFragment = new TrxFragment(homeFragment, bottomNavigationView, itemId);
+            }
+            switchFragment(trxFragment);
+            return true;
         }
-
-        return true;
+        return false;
     }
 
-    public void replaceFragment(Fragment fragment) {
+    @Override
+    public void switchFragment(Fragment targetFragment) {
         FragmentManager fragmentManager = getSupportFragmentManager();
-        Fragment currentFragment = fragmentManager.findFragmentById(R.id.fragmentContainerView);
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
-        if(currentFragment == null || !currentFragment.getClass().equals(fragment.getClass())) {
-            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.hide(activeFragment);
 
-            fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE).replace(R.id.fragmentContainerView, fragment);
-            fragmentTransaction.commit();
+        if (targetFragment.isAdded()) {
+            fragmentTransaction.show(targetFragment);
+        } else {
+            fragmentTransaction.add(R.id.fragmentContainerView, targetFragment, targetFragment.getClass().getSimpleName());
         }
+
+        activeFragment = targetFragment;
+
+        fragmentTransaction.commit();
     }
+
 }

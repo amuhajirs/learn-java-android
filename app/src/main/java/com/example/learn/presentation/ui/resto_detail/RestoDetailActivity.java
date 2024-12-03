@@ -11,9 +11,11 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.bumptech.glide.Glide;
 import com.example.learn.R;
@@ -22,6 +24,7 @@ import com.example.learn.data.dto.resto.GetProductsDto;
 import com.example.learn.data.dto.resto.ProductDto;
 import com.example.learn.data.dto.resto.ProductsPerCategory;
 import com.example.learn.presentation.adapter.CategoryProductAdapter;
+import com.example.learn.presentation.ui.widget.CustomActionBar;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.tabs.TabLayout;
 
@@ -34,7 +37,7 @@ import dagger.hilt.android.AndroidEntryPoint;
 @AndroidEntryPoint
 public class RestoDetailActivity extends AppCompatActivity {
     private RestoDetailViewModel viewModel;
-    private View checkoutWrapper, backBtn, checkoutBtn, sheetBtn;
+    private View checkoutWrapper, checkoutBtn, sheetBtn;
     private ImageView restoAvatar, restoBanner, sheetProductImg;
     private TextView restoName, restoCategory, restoRating, restoRatingCount, totalQuantity, totalAmount, sheetProductName, sheetProductDesc, sheetProductSold, sheetProductLike, sheetProductPrice;
     private TabLayout categoryTab;
@@ -42,6 +45,7 @@ public class RestoDetailActivity extends AppCompatActivity {
     private CategoryProductAdapter categoryProductAdapter;
     private LinearLayoutManager categoryRecyclerLayoutManager;
     private BottomSheetDialog bottomSheetDialog;
+    private SwipeRefreshLayout swipeRefreshLayout;
     private boolean isTabClicked = false;
     private ProductDto selectedProduct = null;
 
@@ -52,7 +56,9 @@ public class RestoDetailActivity extends AppCompatActivity {
 
         viewModel = new ViewModelProvider(this).get(RestoDetailViewModel.class);
 
-        backBtn = findViewById(R.id.back_btn);
+        swipeRefreshLayout = findViewById(R.id.refresh);
+        swipeRefreshLayout.setColorSchemeColors(ContextCompat.getColor(this, R.color.primary));
+
         restoBanner = findViewById(R.id.resto_banner);
         restoAvatar = findViewById(R.id.resto_avatar);
         restoName = findViewById(R.id.resto_name);
@@ -66,16 +72,18 @@ public class RestoDetailActivity extends AppCompatActivity {
         totalQuantity = findViewById(R.id.total_quantity);
         totalAmount = findViewById(R.id.total_amount);
 
-//        Recycler
         categoryProductRecycler = findViewById(R.id.category_product_recycler);
         categoryRecyclerLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         categoryProductRecycler.setLayoutManager(categoryRecyclerLayoutManager);
         categoryProductRecycler.setNestedScrollingEnabled(false);
 
+        categoryProductAdapter = new CategoryProductAdapter(this, viewModel, this::handleBottomSheet);
+        categoryProductRecycler.setAdapter(categoryProductAdapter);
+
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
-            Glide.with(restoBanner.getContext()).load(extras.getString("banner")).into(restoBanner);
-            Glide.with(restoAvatar.getContext()).load(extras.getString("avatar")).into(restoAvatar);
+            Glide.with(restoBanner.getContext()).load(extras.getString("banner")).placeholder(R.drawable.banner_home).into(restoBanner);
+            Glide.with(restoAvatar.getContext()).load(extras.getString("avatar")).placeholder(R.drawable.img_placeholder).into(restoAvatar);
             restoName.setText(extras.getString("name"));
             restoCategory.setText(extras.getString("category"));
             restoRating.setText(String.format("%.1f", extras.getFloat("rating_avg")));
@@ -84,36 +92,41 @@ public class RestoDetailActivity extends AppCompatActivity {
             finish();
         }
 
+        initBottomSheet();
         listeners();
         stateObserver();
-        initBottomSheet();
     }
 
     private void listeners() {
-        backBtn.setOnClickListener(v -> finish());
-        categoryTab.addOnTabSelectedListener(handleSelectCategoryTab());
-        categoryProductRecycler.addOnScrollListener(handleOnScrollCategoryRecycler());
+        swipeRefreshLayout.setOnRefreshListener(() -> viewModel.fetchProducts());
         checkoutBtn.setOnClickListener(v -> {
             Log.d("CHECKOUT", "clicked");
         });
     }
 
     private void stateObserver() {
-        viewModel.getProducts().observe(this, products -> {
-            if (products != null) {
-                for (CategoryDto category: products.meta.categories) {
-                    categoryTab.addTab(categoryTab.newTab().setText(category.name));
-                }
+        viewModel.getProducts().observe(this, productsState -> {
+            switch (productsState.getStatus()) {
+                case LOADING:
+                    categoryProductAdapter.setLoading(true);
+                    break;
+                case SUCCESS:
+                    categoryTab.removeAllTabs();
+                    for (CategoryDto category: productsState.getData().meta.categories) {
+                        categoryTab.addTab(categoryTab.newTab().setText(category.name));
+                    }
 
-                ArrayList<ProductsPerCategory> productCategoryList = new ArrayList<>(Arrays.asList(products.data));
-                categoryProductAdapter = new CategoryProductAdapter(this, viewModel, this::handleBottomSheet);
-                categoryProductAdapter.setProductCategories(productCategoryList);
-                categoryProductRecycler.setAdapter(categoryProductAdapter);
+                    ArrayList<ProductsPerCategory> productCategoryList = new ArrayList<>(Arrays.asList(productsState.getData().data));
+                    categoryProductAdapter.setProductCategories(productCategoryList);
+                    categoryTab.addOnTabSelectedListener(handleSelectCategoryTab());
+                    categoryProductRecycler.addOnScrollListener(handleOnScrollCategoryRecycler());
+                    swipeRefreshLayout.setRefreshing(false);
+                    break;
+                case ERROR:
+                    Toast.makeText(this, productsState.getMessage(), Toast.LENGTH_LONG).show();
+                    swipeRefreshLayout.setRefreshing(false);
+                    break;
             }
-        });
-
-        viewModel.getErrorProductsMsg().observe(this, msg -> {
-            Toast.makeText(this, msg, Toast.LENGTH_LONG).show();
         });
 
         viewModel.getQuantities().observe(this, quantities -> {
@@ -132,7 +145,7 @@ public class RestoDetailActivity extends AppCompatActivity {
     private void initBottomSheet() {
         bottomSheetDialog = new BottomSheetDialog(this);
         View bottomSheetView = LayoutInflater.from(this).inflate(
-                R.layout.bottom_sheet_layout,
+                R.layout.layout_bottom_sheet,
                 null
         );
 
@@ -187,15 +200,18 @@ public class RestoDetailActivity extends AppCompatActivity {
                 if(!isTabClicked) {
                     int firstVisiblePosition = categoryRecyclerLayoutManager.findFirstVisibleItemPosition();
                     int cumulativeCount = 0;
-                    GetProductsDto.Response categories = viewModel.getProducts().getValue();
+                    GetProductsDto.Response categories = viewModel.getProducts().getValue().getData();
 
-                    for (int i = 0; i < categories.data.length; i++) {
-                        cumulativeCount += categories.data[i].data.length;
-                        if (firstVisiblePosition < cumulativeCount) {
-                            categoryTab.selectTab(categoryTab.getTabAt(i));
-                            break;
+                    if(categories != null) {
+                        for (int i = 0; i < categories.data.length; i++) {
+                            cumulativeCount += categories.data[i].data.length;
+                            if (firstVisiblePosition < cumulativeCount) {
+                                categoryTab.selectTab(categoryTab.getTabAt(i));
+                                break;
+                            }
                         }
                     }
+
                 }
             }
         };
@@ -210,7 +226,7 @@ public class RestoDetailActivity extends AppCompatActivity {
                 int startPosition = 0;
 
                 for (int i = 0; i < position; i++) {
-                    startPosition += viewModel.getProducts().getValue().data[i].data.length;
+                    startPosition += viewModel.getProducts().getValue().getData().data[i].data.length;
                 }
 
                 categoryProductRecycler.smoothScrollToPosition(startPosition);
