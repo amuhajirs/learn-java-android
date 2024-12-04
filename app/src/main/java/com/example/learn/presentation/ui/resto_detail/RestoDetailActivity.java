@@ -23,6 +23,7 @@ import com.example.learn.data.dto.resto.CategoryDto;
 import com.example.learn.data.dto.resto.GetProductsDto;
 import com.example.learn.data.dto.resto.ProductDto;
 import com.example.learn.data.dto.resto.ProductsPerCategory;
+import com.example.learn.helper.utils.RippleUtils;
 import com.example.learn.presentation.adapter.CategoryProductAdapter;
 import com.example.learn.presentation.ui.widget.CustomActionBar;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
@@ -114,8 +115,7 @@ public class RestoDetailActivity extends AppCompatActivity {
                         categoryTab.addTab(categoryTab.newTab().setText(category.name));
                     }
 
-                    ArrayList<ProductsPerCategory> productCategoryList = new ArrayList<>(Arrays.asList(productsState.getData().data));
-                    categoryProductAdapter.setProductCategories(productCategoryList);
+                    categoryProductAdapter.setProductCategories(Arrays.asList(productsState.getData().data));
                     categoryTab.addOnTabSelectedListener(handleSelectCategoryTab());
                     categoryProductRecycler.addOnScrollListener(handleOnScrollCategoryRecycler());
                     swipeRefreshLayout.setRefreshing(false);
@@ -141,16 +141,17 @@ public class RestoDetailActivity extends AppCompatActivity {
 
         viewModel.getCheckoutState().observe(this, checkoutState -> {
             switch (checkoutState.getStatus()) {
+                case LOADING:
+                    checkoutBtn.setEnabled(false);
+                    break;
                 case SUCCESS:
-                    checkoutBtn.setActivated(true);
+                    checkoutBtn.setEnabled(true);
                     Toast.makeText(this, checkoutState.getData().message, Toast.LENGTH_LONG).show();
                     break;
                 case ERROR:
-                    checkoutBtn.setActivated(true);
+                    checkoutBtn.setEnabled(true);
                     Toast.makeText(this, checkoutState.getMessage(), Toast.LENGTH_LONG).show();
                     break;
-                case LOADING:
-                    checkoutBtn.setActivated(false);
             }
         });
     }

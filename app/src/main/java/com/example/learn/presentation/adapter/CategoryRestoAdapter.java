@@ -75,8 +75,7 @@ public class CategoryRestoAdapter extends RecyclerView.Adapter<CategoryRestoAdap
         RestaurantsPerCategory restoCategory = restoCategories.get(position);
         holder.categoryName.setText(restoCategory.category.name);
 
-        ArrayList<RestaurantDto> restoList = new ArrayList<>(Arrays.asList(restoCategory.data));
-        restoAdapter.setRestos(restoList, restoCategory.category);
+        restoAdapter.setRestos(Arrays.asList(restoCategory.data), restoCategory.category);
     }
 
     @Override

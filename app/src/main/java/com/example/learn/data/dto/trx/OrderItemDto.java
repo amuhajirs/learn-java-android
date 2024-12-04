@@ -1,5 +1,6 @@
 package com.example.learn.data.dto.trx;
 
+import com.example.learn.data.dto.resto.ProductDto;
 import com.google.gson.annotations.SerializedName;
 
 public class OrderItemDto {
@@ -20,4 +21,6 @@ public class OrderItemDto {
 
     @SerializedName("updated_at")
     public String updatedAt;
+
+    public ProductDto product;
 }

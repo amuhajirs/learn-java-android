@@ -80,8 +80,7 @@ public class CategoryProductAdapter extends RecyclerView.Adapter<CategoryProduct
         ProductsPerCategory productCategory = productCategories.get(position);
         holder.categoryName.setText(productCategory.category.name);
 
-        ArrayList<ProductDto> productList = new ArrayList<>(Arrays.asList(productCategory.data));
-        productAdapter.setProducts(productList);
+        productAdapter.setProducts(Arrays.asList(productCategory.data));
     }
 
     @Override

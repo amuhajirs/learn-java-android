@@ -21,6 +21,7 @@ import com.bumptech.glide.Glide;
 import com.example.learn.R;
 import com.example.learn.data.dto.resto.ProductDto;
 import com.example.learn.helper.constant.ViewConst;
+import com.example.learn.helper.utils.StringUtils;
 
 import java.text.DecimalFormat;
 import java.util.List;
@@ -87,7 +88,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
                 .placeholder(R.drawable.img_placeholder)
                 .into(holder.productImage);
         holder.productName.setText(product.name);
-        holder.productPrice.setText("Rp " + (new DecimalFormat("#,###")).format(product.price).replace(",", "."));
+        holder.productPrice.setText(StringUtils.formatCurrency(product.price));
         holder.productSold.setText(String.valueOf(product.sold));
         holder.productLike.setText(String.valueOf(product.like));
         holder.quantity.setText(viewModel.getQuantities().getValue().getOrDefault(product.id, 0).toString());

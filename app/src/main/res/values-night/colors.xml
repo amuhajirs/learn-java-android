@@ -3,4 +3,5 @@
     <color name="secondary">#262A35</color>
     <color name="text">#FFFFFF</color>
     <color name="bg_body">#0D141E</color>
+    <color name="border_color">#3f4659</color>
 </resources>

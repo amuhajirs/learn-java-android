@@ -22,6 +22,8 @@ public class OrderDto {
 
     public String notes;
 
+    public int amount;
+
     public OrderStatus status;
 
     @SerializedName("is_preorder")
@@ -40,5 +42,5 @@ public class OrderDto {
 
     public OrderItemDto[] items;
 
-    public TransactionDto transactionDto;
+    public TransactionDto transaction;
 }

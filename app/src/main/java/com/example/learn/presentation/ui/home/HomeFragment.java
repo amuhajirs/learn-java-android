@@ -30,6 +30,7 @@ import com.example.learn.presentation.ui.my_resto.MyRestoActivity;
 import com.example.learn.presentation.ui.settings.SettingsActivity;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -104,9 +105,7 @@ public class HomeFragment extends Fragment {
                     categoryRestoAdapter.setLoading(true);
                     break;
                 case SUCCESS:
-                    ArrayList<RestaurantsPerCategory> restoCategoryList = new ArrayList<>();
-                    Collections.addAll(restoCategoryList, restosState.getData().data);
-                    categoryRestoAdapter.setRestoCategories(restoCategoryList);
+                    categoryRestoAdapter.setRestoCategories(Arrays.asList(restosState.getData().data));
                     swipeRefreshLayout.setRefreshing(false);
                     break;
                 case ERROR:

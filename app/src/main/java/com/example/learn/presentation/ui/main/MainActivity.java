@@ -51,7 +51,7 @@ public class MainActivity extends AppCompatActivity implements OnFragmentActionL
             return true;
         } else if (itemId == R.id.nav_transaction) {
             if(trxFragment == null) {
-                trxFragment = new TrxFragment(homeFragment, bottomNavigationView, itemId);
+                trxFragment = new TrxFragment(homeFragment, bottomNavigationView);
             }
             switchFragment(trxFragment);
             return true;
