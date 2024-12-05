@@ -8,9 +8,13 @@ import androidx.lifecycle.ViewModel;
 
 import com.example.learn.data.dto.ErrorDto;
 import com.example.learn.data.dto.trx.GetTransactionDto;
+import com.example.learn.domain.model.FilterTransactions;
 import com.example.learn.domain.usecase.GetTransactionsUseCase;
 import com.example.learn.helper.utils.Resource;
 import com.google.gson.Gson;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.inject.Inject;
 
@@ -23,6 +27,7 @@ import retrofit2.Response;
 public class TrxViewModel extends ViewModel {
     private final GetTransactionsUseCase getTransactionsUseCase;
     private final MutableLiveData<Resource<GetTransactionDto.Response>> transactionsState = new MutableLiveData<>();
+    private final MutableLiveData<FilterTransactions> filterTrx = new MutableLiveData<>(new FilterTransactions("", "", ""));
 
     @Inject
     public TrxViewModel(GetTransactionsUseCase getTransactionsUseCase) {
@@ -35,6 +40,32 @@ public class TrxViewModel extends ViewModel {
         }
 
         return transactionsState;
+    }
+
+    public LiveData<FilterTransactions> getFilterTrx() {
+        return filterTrx;
+    }
+
+    public void updateStatusFilter(String value) {
+        FilterTransactions currentFilter = filterTrx.getValue();
+        FilterTransactions updatedFilter = new FilterTransactions(value, currentFilter.categoryId, currentFilter.date);
+        filterTrx.setValue(updatedFilter);
+    }
+
+    public void updateCategoryFilter(String value) {
+        FilterTransactions currentFilter = filterTrx.getValue();
+        FilterTransactions updatedFilter = new FilterTransactions(currentFilter.status, value, currentFilter.date);
+        filterTrx.setValue(updatedFilter);
+    }
+
+    public void updateDateFilter(String value) {
+        FilterTransactions currentFilter = filterTrx.getValue();
+        FilterTransactions updatedFilter = new FilterTransactions(currentFilter.status, currentFilter.categoryId, value);
+        filterTrx.setValue(updatedFilter);
+    }
+
+    public void clearFilter() {
+        filterTrx.setValue(new FilterTransactions("", "", ""));
     }
 
     public void fetchGetTransactions() {

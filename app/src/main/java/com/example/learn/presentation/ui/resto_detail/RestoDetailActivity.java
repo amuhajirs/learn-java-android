@@ -22,15 +22,12 @@ import com.example.learn.R;
 import com.example.learn.data.dto.resto.CategoryDto;
 import com.example.learn.data.dto.resto.GetProductsDto;
 import com.example.learn.data.dto.resto.ProductDto;
-import com.example.learn.data.dto.resto.ProductsPerCategory;
-import com.example.learn.helper.utils.RippleUtils;
+import com.example.learn.helper.utils.StringUtils;
 import com.example.learn.presentation.adapter.CategoryProductAdapter;
-import com.example.learn.presentation.ui.widget.CustomActionBar;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.tabs.TabLayout;
 
 import java.text.DecimalFormat;
-import java.util.ArrayList;
 import java.util.Arrays;
 
 import dagger.hilt.android.AndroidEntryPoint;
@@ -132,7 +129,7 @@ public class RestoDetailActivity extends AppCompatActivity {
 
             if (totalQuantities > 0) {
                 totalQuantity.setText(String.valueOf(totalQuantities));
-                totalAmount.setText("Rp " + (new DecimalFormat("#,###")).format(viewModel.getTotalAmount()).replace(",", "."));
+                totalAmount.setText(StringUtils.formatCurrency(viewModel.getTotalAmount()));
                 checkoutWrapper.setVisibility(View.VISIBLE);
             } else {
                 checkoutWrapper.setVisibility(View.GONE);
@@ -159,7 +156,7 @@ public class RestoDetailActivity extends AppCompatActivity {
     private void initBottomSheet() {
         bottomSheetDialog = new BottomSheetDialog(this);
         View bottomSheetView = LayoutInflater.from(this).inflate(
-                R.layout.layout_bottom_sheet,
+                R.layout.bottom_sheet_resto_detail,
                 null
         );
 
@@ -198,7 +195,7 @@ public class RestoDetailActivity extends AppCompatActivity {
         sheetProductName.setText(product.name);
         sheetProductSold.setText(String.valueOf(product.sold));
         sheetProductLike.setText(String.valueOf(product.like));
-        sheetProductPrice.setText("Rp " + (new DecimalFormat("#,###")).format(product.price).replace(",", "."));
+        sheetProductPrice.setText(StringUtils.formatCurrency(product.price));
         sheetProductDesc.setText(product.description);
         selectedProduct = product;
 
