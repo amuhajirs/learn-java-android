@@ -89,22 +89,27 @@ public class TrxRestoAdapter extends RecyclerView.Adapter<TrxRestoAdapter.TrxRes
 
         switch (trx.status) {
             case WAITING:
+                holder.statusText.setText("Menunggu Konfirmasi");
                 holder.statusText.setTextColor(ContextCompat.getColor(context, R.color.blue));
                 holder.statusCard.setCardBackgroundColor(ColorUtils.setAlphaComponent(ContextCompat.getColor(context, R.color.blue), (int) (0.2 * 255)));
                 break;
             case INPROGRESS:
+                holder.statusText.setText("Diproses");
                 holder.statusText.setTextColor(ContextCompat.getColor(context, R.color.orange));
                 holder.statusCard.setCardBackgroundColor(ColorUtils.setAlphaComponent(ContextCompat.getColor(context, R.color.orange), (int) (0.2 * 255)));
                 break;
             case READY:
+                holder.statusText.setText("Siap Diambil");
                 holder.statusText.setTextColor(ContextCompat.getColor(context, R.color.orange));
                 holder.statusCard.setCardBackgroundColor(ColorUtils.setAlphaComponent(ContextCompat.getColor(context, R.color.orange), (int) (0.2 * 255)));
                 break;
             case SUCCESS:
+                holder.statusText.setText("Sukses");
                 holder.statusText.setTextColor(ContextCompat.getColor(context, R.color.green));
                 holder.statusCard.setCardBackgroundColor(ColorUtils.setAlphaComponent(ContextCompat.getColor(context, R.color.green), (int) (0.2 * 255)));
                 break;
             case CANCELED:
+                holder.statusText.setText("Dibatalkan");
                 holder.statusText.setTextColor(ContextCompat.getColor(context, R.color.red));
                 holder.statusCard.setCardBackgroundColor(ColorUtils.setAlphaComponent(ContextCompat.getColor(context, R.color.red), (int) (0.2 * 255)));
                 break;
