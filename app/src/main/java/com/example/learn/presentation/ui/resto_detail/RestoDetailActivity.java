@@ -1,9 +1,13 @@
 package com.example.learn.presentation.ui.resto_detail;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -24,6 +28,7 @@ import com.example.learn.data.dto.resto.GetProductsDto;
 import com.example.learn.data.dto.resto.ProductDto;
 import com.example.learn.helper.utils.StringUtils;
 import com.example.learn.presentation.adapter.CategoryProductAdapter;
+import com.example.learn.presentation.ui.widget.CustomActionBar;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.tabs.TabLayout;
 
@@ -44,6 +49,7 @@ public class RestoDetailActivity extends AppCompatActivity {
     private LinearLayoutManager categoryRecyclerLayoutManager;
     private BottomSheetDialog bottomSheetDialog;
     private SwipeRefreshLayout swipeRefreshLayout;
+    private CustomActionBar actionBar;
     private boolean isTabClicked = false;
     private ProductDto selectedProduct = null;
 
@@ -53,6 +59,8 @@ public class RestoDetailActivity extends AppCompatActivity {
         setContentView(R.layout.activity_resto_detail);
 
         viewModel = new ViewModelProvider(this).get(RestoDetailViewModel.class);
+
+        actionBar = findViewById(R.id.action_bar);
 
         swipeRefreshLayout = findViewById(R.id.refresh);
         swipeRefreshLayout.setColorSchemeColors(ContextCompat.getColor(this, R.color.primary));
@@ -98,6 +106,20 @@ public class RestoDetailActivity extends AppCompatActivity {
     private void listeners() {
         swipeRefreshLayout.setOnRefreshListener(() -> viewModel.fetchProducts());
         checkoutBtn.setOnClickListener(v -> viewModel.fetchCheckout());
+        actionBar.getSearchInput().setOnEditorActionListener((v, actionId, event) -> {
+            if (actionId == EditorInfo.IME_ACTION_SEARCH ||
+                    (event != null && event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) {
+                String query = actionBar.getSearchInput().getText().toString();
+                viewModel.updateSearchQuery(query);
+
+                InputMethodManager imm = (InputMethodManager) v.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+                if (imm != null) {
+                    imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+                }
+                return true;
+            }
+            return false;
+        });
     }
 
     private void stateObserver() {
@@ -150,6 +172,10 @@ public class RestoDetailActivity extends AppCompatActivity {
                     Toast.makeText(this, checkoutState.getMessage(), Toast.LENGTH_LONG).show();
                     break;
             }
+        });
+
+        viewModel.getQuery().observe(this, query -> {
+            viewModel.fetchProducts();
         });
     }
 

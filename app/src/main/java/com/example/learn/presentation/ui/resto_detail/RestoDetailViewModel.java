@@ -75,6 +75,16 @@ public class RestoDetailViewModel extends ViewModel implements ProductAdapter.Qu
         }
     }
 
+    public LiveData<GetProductsDto.Query> getQuery() {
+        return query;
+    }
+
+    public void updateSearchQuery(String value) {
+        GetProductsDto.Query copyQuery = query.getValue().copy();
+        copyQuery.search = value;
+        query.setValue(copyQuery);
+    }
+
     public int getTotalQuantities() {
         int total = 0;
         Map<Integer, Integer> currentQuantities = productQuantities.getValue();
