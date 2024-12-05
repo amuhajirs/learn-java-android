@@ -27,7 +27,7 @@ import retrofit2.Response;
 public class TrxViewModel extends ViewModel {
     private final GetTransactionsUseCase getTransactionsUseCase;
     private final MutableLiveData<Resource<GetTransactionDto.Response>> transactionsState = new MutableLiveData<>();
-    private final MutableLiveData<FilterTransactions> filterTrx = new MutableLiveData<>(new FilterTransactions("", "", ""));
+    private final MutableLiveData<FilterTransactions> filterTrx = new MutableLiveData<>(new FilterTransactions());
 
     @Inject
     public TrxViewModel(GetTransactionsUseCase getTransactionsUseCase) {
@@ -46,32 +46,38 @@ public class TrxViewModel extends ViewModel {
         return filterTrx;
     }
 
+    public void updateSearchFilter(String value) {
+        FilterTransactions copyFilter = filterTrx.getValue().copy();
+        copyFilter.search = value;
+        filterTrx.setValue(copyFilter);
+    }
+
     public void updateStatusFilter(String value) {
-        FilterTransactions currentFilter = filterTrx.getValue();
-        FilterTransactions updatedFilter = new FilterTransactions(value, currentFilter.categoryId, currentFilter.date);
-        filterTrx.setValue(updatedFilter);
+        FilterTransactions copyFilter = filterTrx.getValue().copy();
+        copyFilter.status = value;
+        filterTrx.setValue(copyFilter);
     }
 
     public void updateCategoryFilter(String value) {
-        FilterTransactions currentFilter = filterTrx.getValue();
-        FilterTransactions updatedFilter = new FilterTransactions(currentFilter.status, value, currentFilter.date);
-        filterTrx.setValue(updatedFilter);
+        FilterTransactions copyFilter = filterTrx.getValue().copy();
+        copyFilter.categoryId = value;
+        filterTrx.setValue(copyFilter);
     }
 
     public void updateDateFilter(String value) {
-        FilterTransactions currentFilter = filterTrx.getValue();
-        FilterTransactions updatedFilter = new FilterTransactions(currentFilter.status, currentFilter.categoryId, value);
-        filterTrx.setValue(updatedFilter);
+        FilterTransactions copyFilter = filterTrx.getValue().copy();
+        copyFilter.date = value;
+        filterTrx.setValue(copyFilter);
     }
 
     public void clearFilter() {
-        filterTrx.setValue(new FilterTransactions("", "", ""));
+        filterTrx.setValue(new FilterTransactions());
     }
 
     public void fetchGetTransactions() {
         transactionsState.setValue(Resource.loading());
 
-        getTransactionsUseCase.execute(new Callback<GetTransactionDto.Response>() {
+        getTransactionsUseCase.execute(filterTrx.getValue().search, new Callback<GetTransactionDto.Response>() {
             @Override
             public void onResponse(Call<GetTransactionDto.Response> call, Response<GetTransactionDto.Response> response) {
                 if(response.isSuccessful()) {

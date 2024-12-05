@@ -15,8 +15,8 @@ public class TrxRepositoryImpl implements TrxRepository {
         this.trxApi = trxApi;
     }
 
-    public Call<GetTransactionDto.Response> getTransactions() {
-        return trxApi.getTransactions("", "1", "10", "created_at", "desc", "");
+    public Call<GetTransactionDto.Response> getTransactions(String search) {
+        return trxApi.getTransactions(search, "1", "10", "created_at", "desc", "");
     };
     public Call<CreateCartDto.Response> createCart(CreateCartDto.Body body) {
         return trxApi.createCart(body);

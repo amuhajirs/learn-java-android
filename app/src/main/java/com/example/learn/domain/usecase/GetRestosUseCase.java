@@ -15,7 +15,7 @@ public class GetRestosUseCase {
         this.restoRepository = restoRepository;
     }
 
-    public void execute(Callback<GetRestosDto.Response> callback) {
-        restoRepository.getRestos().enqueue(callback);
+    public void execute(GetRestosDto.Query query, Callback<GetRestosDto.Response> callback) {
+        restoRepository.getRestos(query).enqueue(callback);
     }
 }

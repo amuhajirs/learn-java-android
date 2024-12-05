@@ -9,4 +9,9 @@
     <color name="text">#4E4E4E</color>
     <color name="bg_body">#F6F2F2</color>
     <color name="border_color">#E4E4E4</color>
+
+    <color name="blue">#2153eb</color>
+    <color name="orange">#ff9505</color>
+    <color name="red">#c40003</color>
+    <color name="green">#0ecc18</color>
 </resources>

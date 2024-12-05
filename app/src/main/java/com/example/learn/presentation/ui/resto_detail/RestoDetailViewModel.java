@@ -9,6 +9,7 @@ import androidx.lifecycle.ViewModel;
 
 import com.example.learn.data.dto.ErrorDto;
 import com.example.learn.data.dto.resto.GetProductsDto;
+import com.example.learn.data.dto.resto.GetRestosDto;
 import com.example.learn.data.dto.resto.ProductDto;
 import com.example.learn.data.dto.resto.ProductsPerCategory;
 import com.example.learn.data.dto.trx.CreateCartDto;
@@ -37,6 +38,7 @@ public class RestoDetailViewModel extends ViewModel implements ProductAdapter.Qu
     private final CreateOrderUseCase createOrderUseCase;
     private final int restaurantId;
 
+    private final MutableLiveData<GetProductsDto.Query> query = new MutableLiveData<>(new GetProductsDto.Query());
     private final MutableLiveData<Resource<GetProductsDto.Response>> productsState = new MutableLiveData<>();
     private final MutableLiveData<Map<Integer, Integer>> productQuantities = new MutableLiveData<>(new HashMap<>());
     private final MutableLiveData<Resource<CreateOrderDto.Response>> checkoutState = new MutableLiveData<>();
@@ -106,7 +108,7 @@ public class RestoDetailViewModel extends ViewModel implements ProductAdapter.Qu
     public void fetchProducts() {
         productsState.setValue(Resource.loading());
 
-        getProductsUseCase.execute(restaurantId, new Callback<GetProductsDto.Response>() {
+        getProductsUseCase.execute(restaurantId, query.getValue(), new Callback<GetProductsDto.Response>() {
             @Override
             public void onResponse(Call<GetProductsDto.Response> call, Response<GetProductsDto.Response> response) {
                 if(response.isSuccessful()) {

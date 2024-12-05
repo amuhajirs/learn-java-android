@@ -15,7 +15,7 @@ public class GetTransactionsUseCase {
         this.trxRepository = trxRepository;
     }
 
-    public void execute(Callback<GetTransactionDto.Response> callback) {
-        trxRepository.getTransactions().enqueue(callback);
+    public void execute(String search, Callback<GetTransactionDto.Response> callback) {
+        trxRepository.getTransactions(search).enqueue(callback);
     }
 }

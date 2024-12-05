@@ -33,6 +33,7 @@ public class HomeViewModel extends ViewModel {
     private final LogoutUseCase logoutUseCase;
     private final MutableLiveData<String> logoutSuccessMsg = new MutableLiveData<>();
     private final MutableLiveData<String> logoutErrorMsg = new MutableLiveData<>();
+    private final MutableLiveData<GetRestosDto.Query> query = new MutableLiveData<>(new GetRestosDto.Query());
     private final MutableLiveData<Resource<GetRestosDto.Response>> restosState = new MutableLiveData<>();
 
     @Inject
@@ -90,7 +91,7 @@ public class HomeViewModel extends ViewModel {
     public void fetchRestos() {
         restosState.setValue(Resource.loading());
 
-        getRestosUseCase.execute(new Callback<GetRestosDto.Response>() {
+        getRestosUseCase.execute(query.getValue(), new Callback<GetRestosDto.Response>() {
             @Override
             public void onResponse(Call<GetRestosDto.Response> call, Response<GetRestosDto.Response> response) {
                 if (response.isSuccessful()) {

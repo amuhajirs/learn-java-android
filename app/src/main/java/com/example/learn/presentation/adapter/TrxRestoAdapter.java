@@ -8,6 +8,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
+import androidx.core.content.ContextCompat;
+import androidx.core.graphics.ColorUtils;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -84,6 +87,29 @@ public class TrxRestoAdapter extends RecyclerView.Adapter<TrxRestoAdapter.TrxRes
         holder.totalAmount.setText(StringUtils.formatCurrency(trx.amount));
         holder.trxId.setText(trx.transaction.transactionCode);
 
+        switch (trx.status) {
+            case WAITING:
+                holder.statusText.setTextColor(ContextCompat.getColor(context, R.color.blue));
+                holder.statusCard.setCardBackgroundColor(ColorUtils.setAlphaComponent(ContextCompat.getColor(context, R.color.blue), (int) (0.2 * 255)));
+                break;
+            case INPROGRESS:
+                holder.statusText.setTextColor(ContextCompat.getColor(context, R.color.orange));
+                holder.statusCard.setCardBackgroundColor(ColorUtils.setAlphaComponent(ContextCompat.getColor(context, R.color.orange), (int) (0.2 * 255)));
+                break;
+            case READY:
+                holder.statusText.setTextColor(ContextCompat.getColor(context, R.color.orange));
+                holder.statusCard.setCardBackgroundColor(ColorUtils.setAlphaComponent(ContextCompat.getColor(context, R.color.orange), (int) (0.2 * 255)));
+                break;
+            case SUCCESS:
+                holder.statusText.setTextColor(ContextCompat.getColor(context, R.color.green));
+                holder.statusCard.setCardBackgroundColor(ColorUtils.setAlphaComponent(ContextCompat.getColor(context, R.color.green), (int) (0.2 * 255)));
+                break;
+            case CANCELED:
+                holder.statusText.setTextColor(ContextCompat.getColor(context, R.color.red));
+                holder.statusCard.setCardBackgroundColor(ColorUtils.setAlphaComponent(ContextCompat.getColor(context, R.color.red), (int) (0.2 * 255)));
+                break;
+        }
+
         trxProductAdapter.setTrxProducts(Arrays.asList(trx.items));
     }
 
@@ -103,7 +129,8 @@ public class TrxRestoAdapter extends RecyclerView.Adapter<TrxRestoAdapter.TrxRes
     public static class TrxRestoViewHolder extends RecyclerView.ViewHolder {
         public RecyclerView trxProductRecycler;
         public ImageView restoAvatar;
-        public TextView restoName, totalAmount, trxId;
+        public TextView restoName, totalAmount, trxId, statusText;
+        public CardView statusCard;
 
         public TrxRestoViewHolder(@NonNull View itemView, Context context, int viewType) {
             super(itemView);
@@ -120,7 +147,8 @@ public class TrxRestoAdapter extends RecyclerView.Adapter<TrxRestoAdapter.TrxRes
             restoName = itemView.findViewById(R.id.resto_name);
             totalAmount = itemView.findViewById(R.id.total_amount);
             trxId = itemView.findViewById(R.id.trx_id);
-
+            statusText = itemView.findViewById(R.id.status_text);
+            statusCard = itemView.findViewById(R.id.status_card);
         }
     }
 }

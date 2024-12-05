@@ -11,10 +11,12 @@ import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.example.learn.R;
+import com.google.android.material.textfield.TextInputEditText;
 
 public class CustomActionBar extends ConstraintLayout {
 
     private ImageButton backButton;
+    private TextInputEditText searchInput;
 
     public CustomActionBar(@NonNull Context context) {
         super(context);
@@ -29,6 +31,7 @@ public class CustomActionBar extends ConstraintLayout {
     private void init(Context context) {
         LayoutInflater.from(context).inflate(R.layout.custom_action_bar, this, true);
         backButton = findViewById(R.id.back_btn);
+        searchInput = findViewById(R.id.action_search);
 
         backButton.setOnClickListener(v -> {
             if (context instanceof Activity) {
@@ -39,6 +42,10 @@ public class CustomActionBar extends ConstraintLayout {
 
     public ImageButton getBackButton() {
         return backButton;
+    }
+
+    public TextInputEditText getSearchInput() {
+        return searchInput;
     }
 }
 

@@ -14,11 +14,11 @@ public class RestoRepositoryImpl implements RestoRepository {
         this.restoApi = restoApi;
     }
 
-    public Call<GetRestosDto.Response> getRestos() {
-        return restoApi.getRestos("", "1", "10", "id", "desc", "");
+    public Call<GetRestosDto.Response> getRestos(GetRestosDto.Query query) {
+        return restoApi.getRestos(query.search, query.page, query.limit, query.order, query.direction, query.categoryId);
     }
 
-    public Call<GetProductsDto.Response> getProducts(int restaurantId) {
-        return restoApi.getProducts(restaurantId, "", "1", "10", "id", "desc", "");
+    public Call<GetProductsDto.Response> getProducts(int restaurantId, GetProductsDto.Query query) {
+        return restoApi.getProducts(restaurantId, query.search, query.page, query.limit, query.order, query.direction, query.categoryId);
     }
 }

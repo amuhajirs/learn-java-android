@@ -27,7 +27,9 @@ import com.example.learn.helper.utils.DataStoreSingleton;
 import com.example.learn.presentation.adapter.CategoryRestoAdapter;
 import com.example.learn.presentation.ui.login.LoginActivity;
 import com.example.learn.presentation.ui.my_resto.MyRestoActivity;
+import com.example.learn.presentation.ui.search_resto.SearchRestoActivity;
 import com.example.learn.presentation.ui.settings.SettingsActivity;
+import com.google.android.material.textfield.TextInputLayout;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -44,6 +46,7 @@ public class HomeFragment extends Fragment {
     private RecyclerView categoryRestoRecycler;
     private CategoryRestoAdapter categoryRestoAdapter;
     private SwipeRefreshLayout swipeRefreshLayout;
+    private View searchInput;
 
     public HomeFragment() {
     }
@@ -57,6 +60,7 @@ public class HomeFragment extends Fragment {
         avatarEl = view.findViewById(R.id.avatar);
         categoryRestoRecycler = view.findViewById(R.id.category_resto_recycler);
         swipeRefreshLayout = view.findViewById(R.id.refresh);
+        searchInput = view.findViewById(R.id.search_input);
 
         swipeRefreshLayout.setColorSchemeColors(ContextCompat.getColor(requireContext(), R.color.primary));
 
@@ -83,6 +87,10 @@ public class HomeFragment extends Fragment {
         btnLogoutEl.setOnClickListener(this::handleLogout);
         avatarEl.setOnClickListener(this::handleClickAvatar);
         swipeRefreshLayout.setOnRefreshListener(() -> viewModel.fetchRestos());
+        searchInput.setOnClickListener((v) -> {
+            startActivity(new Intent(requireContext(), SearchRestoActivity.class));
+            getActivity().overridePendingTransition(R.anim.popup_enter, R.anim.popup_exit);
+        });
     }
 
     private void stateObserver() {

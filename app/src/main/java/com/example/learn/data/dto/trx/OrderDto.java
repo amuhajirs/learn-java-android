@@ -4,7 +4,7 @@ import com.example.learn.data.dto.resto.RestaurantDto;
 import com.google.gson.annotations.SerializedName;
 
 public class OrderDto {
-    enum OrderStatus {
+    public enum OrderStatus {
         WAITING,
         INPROGRESS,
         READY,

@@ -6,9 +6,11 @@ import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -143,6 +145,18 @@ public class TrxFragment extends Fragment {
             listener.switchFragment(homeFragment);
             bottomNavigationView.setSelectedItemId(R.id.nav_home);
         });
+
+        actionBar.getSearchInput().setOnEditorActionListener((v, actionId, event) -> {
+            if (actionId == EditorInfo.IME_ACTION_SEARCH ||
+                    (event != null && event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) {
+                // Lakukan pencarian atau aksi lain di sini
+                String query = actionBar.getSearchInput().getText().toString();
+                viewModel.updateSearchFilter(query);
+                return true;
+            }
+            return false;
+        });
+
         swipeRefreshLayout.setOnRefreshListener(() -> viewModel.fetchGetTransactions());
 
         filterStatus.setOnClickListener(v -> renderRadioFilter("Mau lihat status apa?", STATUS, R.id.filter_status));
@@ -185,6 +199,8 @@ public class TrxFragment extends Fragment {
             } else {
                 clearBtn.setVisibility(View.GONE);
             }
+
+            viewModel.fetchGetTransactions();
         });
     }
 

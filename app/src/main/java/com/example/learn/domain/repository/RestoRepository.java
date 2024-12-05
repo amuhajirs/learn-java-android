@@ -6,6 +6,6 @@ import com.example.learn.data.dto.resto.GetRestosDto;
 import retrofit2.Call;
 
 public interface RestoRepository {
-    Call<GetRestosDto.Response> getRestos();
-    Call<GetProductsDto.Response> getProducts(int restaurantId);
+    Call<GetRestosDto.Response> getRestos(GetRestosDto.Query query);
+    Call<GetProductsDto.Response> getProducts(int restaurantId, GetProductsDto.Query query);
 }

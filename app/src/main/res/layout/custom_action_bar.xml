@@ -33,14 +33,15 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/editTextText2"
+            android:id="@+id/action_search"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:backgroundTint="@color/secondary"
             android:drawableStart="@drawable/ic_search"
             android:hint="@string/search"
             android:inputType="text"
-            android:padding="8dp" />
+            android:padding="8dp"
+            android:imeOptions="actionSearch"/>
     </com.google.android.material.textfield.TextInputLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
