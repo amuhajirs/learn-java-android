@@ -2,7 +2,6 @@ package com.example.learn.presentation.ui.resto_detail;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,13 +25,12 @@ import com.example.learn.R;
 import com.example.learn.data.dto.resto.CategoryDto;
 import com.example.learn.data.dto.resto.GetProductsDto;
 import com.example.learn.data.dto.resto.ProductDto;
-import com.example.learn.helper.utils.StringUtils;
+import com.example.learn.common.utils.StringUtils;
 import com.example.learn.presentation.adapter.CategoryProductAdapter;
 import com.example.learn.presentation.ui.widget.CustomActionBar;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.tabs.TabLayout;
 
-import java.text.DecimalFormat;
 import java.util.Arrays;
 
 import dagger.hilt.android.AndroidEntryPoint;

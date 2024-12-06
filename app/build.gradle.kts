@@ -1,7 +1,11 @@
+import com.android.build.gradle.internal.cxx.configure.gradleLocalProperties
+
 plugins {
     id("com.android.application")
     id("com.google.dagger.hilt.android")
 }
+
+val WEB_CLIENT_ID = gradleLocalProperties(rootDir, providers).getProperty("WEB_CLIENT_ID", "")
 
 android {
     namespace = "com.example.learn"
@@ -18,9 +22,14 @@ android {
     }
 
     buildTypes {
+        debug {
+            buildConfigField("String", "WEB_CLIENT_ID", "\"${WEB_CLIENT_ID}\"")
+        }
+
         release {
             isMinifyEnabled = false
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+            buildConfigField("String", "WEB_CLIENT_ID", "\"${WEB_CLIENT_ID}\"")
         }
     }
     compileOptions {
@@ -29,6 +38,7 @@ android {
     }
     buildFeatures {
         viewBinding = true
+        buildConfig = true
     }
 }
 
@@ -52,4 +62,7 @@ dependencies {
     implementation("androidx.core:core-splashscreen:1.0.1")
     implementation("com.facebook.shimmer:shimmer:0.5.0")
     implementation("androidx.swiperefreshlayout:swiperefreshlayout:1.1.0")
+    implementation("androidx.credentials:credentials:1.3.0")
+    implementation("androidx.credentials:credentials-play-services-auth:1.3.0")
+    implementation("com.google.android.libraries.identity.googleid:googleid:1.1.1")
 }

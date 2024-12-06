@@ -1,4 +1,4 @@
-package com.example.learn.helper.constant;
+package com.example.learn.common.constant;
 
 public class DatastoreConst {
     public static final String DATASTORE_NAME = "test_datastore";

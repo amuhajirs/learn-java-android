@@ -2,8 +2,8 @@ package com.example.learn.data.api;
 
 import androidx.annotation.NonNull;
 
-import com.example.learn.helper.constant.DatastoreConst;
-import com.example.learn.helper.utils.DataStoreSingleton;
+import com.example.learn.common.constant.DatastoreConst;
+import com.example.learn.common.utils.DataStoreSingleton;
 
 import java.io.IOException;
 

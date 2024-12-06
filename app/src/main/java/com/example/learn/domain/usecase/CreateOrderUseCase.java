@@ -16,12 +16,10 @@ import retrofit2.Response;
 
 public class CreateOrderUseCase {
     private final TrxRepository trxRepository;
-    private final ExecutorService executor;
 
     @Inject
     public CreateOrderUseCase(TrxRepository trxRepository) {
         this.trxRepository = trxRepository;
-        this.executor = Executors.newSingleThreadExecutor();
     }
 
     public CompletableFuture<CreateOrderDto.Response> executeAsync(CreateCartDto.Body[] body) {

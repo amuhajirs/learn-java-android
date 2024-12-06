@@ -1,7 +1,5 @@
 package com.example.learn.presentation.ui.home;
 
-import android.content.Context;
-import android.content.Intent;
 import android.util.Log;
 
 import androidx.lifecycle.LiveData;
@@ -13,16 +11,14 @@ import com.example.learn.data.dto.auth.LogoutDto;
 import com.example.learn.data.dto.resto.GetRestosDto;
 import com.example.learn.domain.usecase.GetRestosUseCase;
 import com.example.learn.domain.usecase.LogoutUseCase;
-import com.example.learn.helper.constant.DatastoreConst;
-import com.example.learn.helper.utils.DataStoreSingleton;
-import com.example.learn.helper.utils.Resource;
-import com.example.learn.presentation.ui.login.LoginActivity;
+import com.example.learn.common.constant.DatastoreConst;
+import com.example.learn.common.utils.DataStoreSingleton;
+import com.example.learn.common.utils.Resource;
 import com.google.gson.Gson;
 
 import javax.inject.Inject;
 
 import dagger.hilt.android.lifecycle.HiltViewModel;
-import dagger.hilt.android.qualifiers.ApplicationContext;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;

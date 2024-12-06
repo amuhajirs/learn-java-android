@@ -1,9 +1,14 @@
 package com.example.learn.domain.usecase;
 
+import com.example.learn.data.dto.ErrorDto;
+import com.example.learn.data.dto.auth.GoogleLoginDto;
 import com.example.learn.data.dto.auth.LoginDto;
 import com.example.learn.domain.repository.AuthRepository;
-import com.example.learn.helper.constant.DatastoreConst;
-import com.example.learn.helper.utils.DataStoreSingleton;
+import com.example.learn.common.constant.DatastoreConst;
+import com.example.learn.common.utils.DataStoreSingleton;
+import com.google.gson.Gson;
+
+import java.io.IOException;
 
 import javax.inject.Inject;
 
@@ -19,7 +24,7 @@ public class LoginUseCase {
         this.authRepository = authRepository;
     }
 
-    public void execute(String email, String password, Callback<LoginDto.Response> callback) {
+    public void execute(String email, String password, ExecuteCb cb) {
         authRepository.login(new LoginDto.Body(email, password)).enqueue(new Callback<LoginDto.Response>() {
             @Override
             public void onResponse(Call<LoginDto.Response> call, Response<LoginDto.Response> response) {
@@ -34,14 +39,29 @@ public class LoginUseCase {
                     dataStoreSingleton.saveValue(DatastoreConst.USER_PHONE, loginResponse.data.phone);
                     dataStoreSingleton.saveValue(DatastoreConst.USER_AVATAR, loginResponse.data.avatar);
 
+                    cb.onSuccess(loginResponse);
+                } else {
+                    try {
+                        assert response.errorBody() != null;
+                        String errorBody = response.errorBody().string();
+                        ErrorDto errorResponse = new Gson().fromJson(errorBody, ErrorDto.class);
+                        cb.onFailure(errorResponse.message);
+                    } catch (IOException e) {
+                        cb.onFailure(e.toString());
+                    }
                 }
-                callback.onResponse(call, response);
+
             }
 
             @Override
             public void onFailure(Call<LoginDto.Response> call, Throwable t) {
-                callback.onFailure(call, t);
+                cb.onFailure(t.toString());
             }
         });
+    }
+
+    public interface ExecuteCb {
+        void onSuccess(LoginDto.Response response);
+        void onFailure(String msg);
     }
 }

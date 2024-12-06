@@ -1,4 +1,4 @@
-package com.example.learn.helper.constant;
+package com.example.learn.common.constant;
 
 public class ViewConst {
     public static final int VIEW_TYPE_SKELETON = 0;

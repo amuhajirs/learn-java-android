@@ -9,14 +9,13 @@ import androidx.lifecycle.ViewModel;
 
 import com.example.learn.data.dto.ErrorDto;
 import com.example.learn.data.dto.resto.GetProductsDto;
-import com.example.learn.data.dto.resto.GetRestosDto;
 import com.example.learn.data.dto.resto.ProductDto;
 import com.example.learn.data.dto.resto.ProductsPerCategory;
 import com.example.learn.data.dto.trx.CreateCartDto;
 import com.example.learn.data.dto.trx.CreateOrderDto;
 import com.example.learn.domain.usecase.CreateOrderUseCase;
 import com.example.learn.domain.usecase.GetProductsUseCase;
-import com.example.learn.helper.utils.Resource;
+import com.example.learn.common.utils.Resource;
 import com.example.learn.presentation.adapter.ProductAdapter;
 import com.google.gson.Gson;
 

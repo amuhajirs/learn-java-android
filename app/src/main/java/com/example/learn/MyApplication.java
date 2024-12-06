@@ -2,12 +2,13 @@ package com.example.learn;
 
 import android.app.Application;
 
+import androidx.credentials.CredentialManager;
 import androidx.datastore.preferences.core.Preferences;
 import androidx.datastore.preferences.rxjava2.RxPreferenceDataStoreBuilder;
 import androidx.datastore.rxjava2.RxDataStore;
 
-import com.example.learn.helper.constant.DatastoreConst;
-import com.example.learn.helper.utils.DataStoreSingleton;
+import com.example.learn.common.constant.DatastoreConst;
+import com.example.learn.common.utils.DataStoreSingleton;
 
 import dagger.hilt.android.HiltAndroidApp;
 

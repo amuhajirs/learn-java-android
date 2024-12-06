@@ -2,8 +2,8 @@ package com.example.learn.domain.usecase;
 
 import com.example.learn.data.dto.auth.LogoutDto;
 import com.example.learn.domain.repository.AuthRepository;
-import com.example.learn.helper.constant.DatastoreConst;
-import com.example.learn.helper.utils.DataStoreSingleton;
+import com.example.learn.common.constant.DatastoreConst;
+import com.example.learn.common.utils.DataStoreSingleton;
 
 import javax.inject.Inject;
 

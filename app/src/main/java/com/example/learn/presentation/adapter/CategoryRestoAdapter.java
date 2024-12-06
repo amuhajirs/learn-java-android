@@ -11,11 +11,9 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.learn.R;
-import com.example.learn.data.dto.resto.RestaurantDto;
 import com.example.learn.data.dto.resto.RestaurantsPerCategory;
-import com.example.learn.helper.constant.ViewConst;
+import com.example.learn.common.constant.ViewConst;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 

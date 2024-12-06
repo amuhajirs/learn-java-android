@@ -2,7 +2,6 @@ package com.example.learn.presentation.ui.home;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -21,20 +20,15 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.bumptech.glide.Glide;
 import com.example.learn.R;
-import com.example.learn.data.dto.resto.RestaurantsPerCategory;
-import com.example.learn.helper.constant.DatastoreConst;
-import com.example.learn.helper.utils.DataStoreSingleton;
+import com.example.learn.common.constant.DatastoreConst;
+import com.example.learn.common.utils.DataStoreSingleton;
 import com.example.learn.presentation.adapter.CategoryRestoAdapter;
 import com.example.learn.presentation.ui.login.LoginActivity;
 import com.example.learn.presentation.ui.my_resto.MyRestoActivity;
 import com.example.learn.presentation.ui.search_resto.SearchRestoActivity;
 import com.example.learn.presentation.ui.settings.SettingsActivity;
-import com.google.android.material.textfield.TextInputLayout;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
 
 import dagger.hilt.android.AndroidEntryPoint;
 

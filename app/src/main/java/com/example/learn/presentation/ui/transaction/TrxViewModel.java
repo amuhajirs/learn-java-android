@@ -10,11 +10,8 @@ import com.example.learn.data.dto.ErrorDto;
 import com.example.learn.data.dto.trx.GetTransactionDto;
 import com.example.learn.domain.model.FilterTransactions;
 import com.example.learn.domain.usecase.GetTransactionsUseCase;
-import com.example.learn.helper.utils.Resource;
+import com.example.learn.common.utils.Resource;
 import com.google.gson.Gson;
-
-import java.util.HashMap;
-import java.util.Map;
 
 import javax.inject.Inject;
 

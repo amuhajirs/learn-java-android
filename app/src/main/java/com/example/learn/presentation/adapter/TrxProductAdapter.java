@@ -1,6 +1,5 @@
 package com.example.learn.presentation.adapter;
 
-import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,8 +12,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.example.learn.R;
 import com.example.learn.data.dto.trx.OrderItemDto;
-import com.example.learn.helper.constant.ViewConst;
-import com.example.learn.helper.utils.StringUtils;
+import com.example.learn.common.constant.ViewConst;
+import com.example.learn.common.utils.StringUtils;
 
 import java.util.List;
 

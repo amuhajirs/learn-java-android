@@ -20,10 +20,9 @@ import com.bumptech.glide.Glide;
 
 import com.example.learn.R;
 import com.example.learn.data.dto.resto.ProductDto;
-import com.example.learn.helper.constant.ViewConst;
-import com.example.learn.helper.utils.StringUtils;
+import com.example.learn.common.constant.ViewConst;
+import com.example.learn.common.utils.StringUtils;
 
-import java.text.DecimalFormat;
 import java.util.List;
 import java.util.Map;
 

@@ -2,7 +2,7 @@ package com.example.learn.data.dto.auth;
 
 import com.google.gson.annotations.SerializedName;
 
-public class LogoutDto {
+public class RefreshDto {
     public static class Body {
         @SerializedName("refresh_token")
         public String refreshToken;
@@ -13,7 +13,7 @@ public class LogoutDto {
     }
 
     public static class Response {
-        public String message;
         public String status;
+        public TokenDto token;
     }
 }

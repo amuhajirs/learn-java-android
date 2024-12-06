@@ -1,18 +1,37 @@
 package com.example.learn.presentation.ui.login;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.CancellationSignal;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.credentials.Credential;
+import androidx.credentials.CredentialManager;
+import androidx.credentials.CredentialManagerCallback;
+import androidx.credentials.GetCredentialRequest;
+import androidx.credentials.GetCredentialResponse;
+import androidx.credentials.GetPasswordOption;
+import androidx.credentials.GetPublicKeyCredentialOption;
+import androidx.credentials.exceptions.GetCredentialException;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.learn.R;
+import com.example.learn.common.constant.ApiConst;
 import com.example.learn.presentation.ui.main.MainActivity;
+import com.google.android.libraries.identity.googleid.GetGoogleIdOption;
+import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential;
+import com.google.android.libraries.identity.googleid.GoogleIdTokenParsingException;
+
+import java.util.UUID;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 
 import dagger.hilt.android.AndroidEntryPoint;
 
@@ -40,7 +59,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private void listeners() {
         btnLoginEl.setOnClickListener(this::handleLogin);
-        btnGoogleEl.setOnClickListener(this::handleGoogle);
+        btnGoogleEl.setOnClickListener(v -> viewModel.googleLogin(this));
     }
 
     private void stateObserver() {
@@ -64,9 +83,5 @@ public class LoginActivity extends AppCompatActivity {
         String pw = passwordEl.getText().toString();
 
         viewModel.login(email, pw);
-    }
-
-    public void handleGoogle(View v) {
-        Log.d("GOOGLE CLICKED", "clicked");
     }
 }

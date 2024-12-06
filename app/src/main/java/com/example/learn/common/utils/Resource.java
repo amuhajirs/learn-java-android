@@ -1,4 +1,4 @@
-package com.example.learn.helper.utils;
+package com.example.learn.common.utils;
 
 public class Resource<T> {
     public enum Status { LOADING, SUCCESS, ERROR }
