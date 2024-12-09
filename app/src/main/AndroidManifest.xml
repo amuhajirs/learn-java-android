@@ -6,7 +6,7 @@
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
-        android:name=".MyApplication"
+        android:name=".core.MyApplication"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
@@ -21,25 +21,25 @@
         <meta-data android:name="asset_statements" android:resource="@string/asset_statements" />
 
         <activity
-            android:name=".presentation.ui.search_resto.SearchRestoActivity"
+            android:name=".features.search.presentation.ui.SearchRestoActivity"
             android:exported="false" />
         <activity
-            android:name=".presentation.ui.my_resto.MyRestoActivity"
+            android:name=".features.my_resto.presentation.ui.MyRestoActivity"
             android:exported="false" />
         <activity
-            android:name=".presentation.ui.settings.SettingsActivity"
+            android:name=".features.settings.presentation.ui.SettingsActivity"
             android:exported="false" />
         <activity
-            android:name=".presentation.ui.resto_detail.RestoDetailActivity"
+            android:name=".features.resto.presentation.ui.RestoDetailActivity"
             android:exported="false" />
         <activity
-            android:name=".presentation.ui.login.LoginActivity"
+            android:name=".features.auth.presentation.ui.LoginActivity"
             android:exported="false" />
         <activity
-            android:name=".presentation.ui.main.MainActivity"
+            android:name=".features.main.presentation.ui.MainActivity"
             android:exported="false" />
         <activity
-            android:name=".presentation.ui.splash.SplashActivity"
+            android:name=".features.splash.presentation.ui.SplashActivity"
             android:exported="true"
             android:theme="@style/Theme.Learn.MySplash">
             <intent-filter>

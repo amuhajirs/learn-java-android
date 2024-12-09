@@ -7,9 +7,9 @@
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintStart_toStartOf="parent"
     app:layout_constraintTop_toTopOf="parent"
-    tools:context=".presentation.ui.resto_detail.RestoDetailActivity">
+    tools:context=".features.resto.presentation.ui.RestoDetailActivity">
 
-    <com.example.learn.presentation.ui.widget.CustomActionBar
+    <com.example.learn.shared.presentation.widget.CustomActionBar
         android:id="@+id/action_bar"
         android:layout_width="match_parent"
         android:layout_height="70dp"

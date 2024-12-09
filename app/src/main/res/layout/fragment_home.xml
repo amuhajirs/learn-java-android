@@ -95,7 +95,7 @@
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                tools:context=".presentation.ui.main.MainActivity">
+                tools:context=".features.main.presentation.ui.MainActivity">
 
                 <ImageView
                     android:id="@+id/imageView6"

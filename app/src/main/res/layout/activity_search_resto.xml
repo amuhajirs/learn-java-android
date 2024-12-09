@@ -5,9 +5,9 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".presentation.ui.search_resto.SearchRestoActivity">
+    tools:context=".features.search.presentation.ui.SearchRestoActivity">
 
-    <com.example.learn.presentation.ui.widget.CustomActionBar
+    <com.example.learn.shared.presentation.widget.CustomActionBar
         android:id="@+id/action_bar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

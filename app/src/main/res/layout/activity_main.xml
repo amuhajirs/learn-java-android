@@ -6,7 +6,7 @@
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/fragmentContainerView"
-        android:name="com.example.learn.presentation.ui.home.HomeFragment"
+        android:name="com.example.learn.features.home.presentation.ui.HomeFragment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
