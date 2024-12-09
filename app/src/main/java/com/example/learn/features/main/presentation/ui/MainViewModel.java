@@ -13,8 +13,8 @@ import dagger.hilt.android.lifecycle.HiltViewModel;
 
 @HiltViewModel
 public class MainViewModel extends ViewModel {
-    private MutableLiveData<Fragment> activeFragment = new MutableLiveData<>();
-    private MutableLiveData<Map<String, Fragment>> fragments = new MutableLiveData<>(new HashMap<>());
+    private final MutableLiveData<Fragment> activeFragment = new MutableLiveData<>();
+    private final MutableLiveData<Map<String, Fragment>> fragments = new MutableLiveData<>(new HashMap<>());
 
     @Inject
     public MainViewModel() {

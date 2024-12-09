@@ -2,10 +2,10 @@ package com.example.learn.features.splash.presentation.ui;
 
 import androidx.lifecycle.ViewModel;
 
-import com.example.learn.features.auth.data.dto.GetProfileDto;
-import com.example.learn.features.auth.domain.usecase.GetProfileUseCase;
 import com.example.learn.common.constant.DatastoreConst;
 import com.example.learn.common.utils.DataStoreSingleton;
+import com.example.learn.features.auth.data.dto.GetProfileDto;
+import com.example.learn.features.auth.domain.usecase.GetProfileUseCase;
 
 import javax.inject.Inject;
 

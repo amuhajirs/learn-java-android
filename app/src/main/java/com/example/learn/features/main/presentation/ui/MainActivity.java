@@ -40,19 +40,19 @@ public class MainActivity extends AppCompatActivity implements OnFragmentActionL
         bottomNavigationView.setBackground(null);
         List<Fragment> fragments = getSupportFragmentManager().getFragments();
 
-        if(fragments.size() == 1) {
+        if (fragments.size() == 1) {
             viewModel.setActiveFragment(fragments.get(0));
         }
 
-        for (Fragment fragment: fragments) {
-            if(fragment instanceof HomeFragment) {
+        for (Fragment fragment : fragments) {
+            if (fragment instanceof HomeFragment) {
                 viewModel.putFragment("Home", fragment);
             } else {
                 viewModel.putFragment("Transactions", fragment);
             }
 
             Fragment activeFragment = viewModel.getActiveFragment();
-            if(activeFragment != null && activeFragment.getClass().equals(fragment.getClass())) {
+            if (activeFragment != null && activeFragment.getClass().equals(fragment.getClass())) {
                 viewModel.setActiveFragment(fragment);
             }
         }
@@ -68,13 +68,13 @@ public class MainActivity extends AppCompatActivity implements OnFragmentActionL
         int itemId = item.getItemId();
 
         if (itemId == R.id.nav_home) {
-            if(viewModel.getFragment("Home") == null) {
+            if (viewModel.getFragment("Home") == null) {
                 viewModel.putFragment("Home", new HomeFragment());
             }
             switchFragment(viewModel.getFragment("Home"));
             return true;
         } else if (itemId == R.id.nav_transaction) {
-            if(viewModel.getFragment("Transactions") == null) {
+            if (viewModel.getFragment("Transactions") == null) {
                 viewModel.putFragment("Transactions", TrxFragment.newInstance(viewModel.getFragment("Home"), bottomNavigationView));
             }
             switchFragment(viewModel.getFragment("Transactions"));

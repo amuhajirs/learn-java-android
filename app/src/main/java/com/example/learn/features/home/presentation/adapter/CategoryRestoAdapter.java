@@ -45,7 +45,7 @@ public class CategoryRestoAdapter extends RecyclerView.Adapter<CategoryRestoAdap
     @NonNull
     @Override
     public CategoryRestoViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        if(viewType == ViewConst.VIEW_TYPE_SKELETON) {
+        if (viewType == ViewConst.VIEW_TYPE_SKELETON) {
             View view = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.skeleton_category_resto, parent, false);
             return new CategoryRestoViewHolder(view, context, viewType);
@@ -61,7 +61,7 @@ public class CategoryRestoAdapter extends RecyclerView.Adapter<CategoryRestoAdap
         RestoAdapter restoAdapter = new RestoAdapter(context);
         holder.restoRecycler.setAdapter(restoAdapter);
 
-        if(isLoading) {
+        if (isLoading) {
             restoAdapter.setLoading(isLoading);
             return;
         }
@@ -78,7 +78,7 @@ public class CategoryRestoAdapter extends RecyclerView.Adapter<CategoryRestoAdap
 
     @Override
     public int getItemCount() {
-        if(isLoading) {
+        if (isLoading) {
             return 3;
         }
 
@@ -101,7 +101,7 @@ public class CategoryRestoAdapter extends RecyclerView.Adapter<CategoryRestoAdap
             restoRecycler.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false));
             restoRecycler.setNestedScrollingEnabled(false);
 
-            if(viewType == ViewConst.VIEW_TYPE_SKELETON) {
+            if (viewType == ViewConst.VIEW_TYPE_SKELETON) {
                 return;
             }
 

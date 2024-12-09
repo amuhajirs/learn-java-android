@@ -1,9 +1,9 @@
 package com.example.learn.features.transactions.domain.usecase;
 
-import com.example.learn.shared.data.dto.ErrorDto;
 import com.example.learn.features.transactions.data.dto.CreateCartDto;
 import com.example.learn.features.transactions.data.dto.CreateOrderDto;
 import com.example.learn.features.transactions.domain.repository.TrxRepository;
+import com.example.learn.shared.data.dto.ErrorDto;
 import com.google.gson.Gson;
 
 import java.util.concurrent.CompletableFuture;
@@ -34,9 +34,9 @@ public class CreateOrderUseCase {
         int cartId = 0;
 
         try {
-            for (CreateCartDto.Body b: body){
+            for (CreateCartDto.Body b : body) {
                 Response<CreateCartDto.Response> res = trxRepository.createCart(b).execute();
-                if(res.isSuccessful()) {
+                if (res.isSuccessful()) {
                     cartId = res.body().data.id;
                 } else {
                     assert res.errorBody() != null;
@@ -49,13 +49,13 @@ public class CreateOrderUseCase {
             throw new Exception(e.toString());
         }
 
-        if(cartId == 0) {
+        if (cartId == 0) {
             throw new Exception("Gagal menambahkan ke cart");
         }
 
         try {
             Response<CreateOrderDto.Response> res = trxRepository.createOrder(new CreateOrderDto.Body(cartId)).execute();
-            if(res.isSuccessful()) {
+            if (res.isSuccessful()) {
                 return res.body();
             } else {
                 assert res.errorBody() != null;

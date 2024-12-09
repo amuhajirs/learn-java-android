@@ -14,7 +14,7 @@ public class OrderItemDto {
 
     public int quantity;
 
-    public  int price;
+    public int price;
 
     @SerializedName("created_at")
     public String createdAt;

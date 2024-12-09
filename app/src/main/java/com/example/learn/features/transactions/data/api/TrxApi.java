@@ -13,12 +13,12 @@ import retrofit2.http.Query;
 public interface TrxApi {
     @GET("/api/v1/user/transactions/orders?")
     Call<GetTransactionDto.Response> getTransactions(
-        @Query("search") String search,
-        @Query("page") String page,
-        @Query("limit") String limit,
-        @Query("order") String order,
-        @Query("direction") String direction,
-        @Query("filter") String filter
+            @Query("search") String search,
+            @Query("page") String page,
+            @Query("limit") String limit,
+            @Query("order") String order,
+            @Query("direction") String direction,
+            @Query("filter") String filter
     );
 
     @POST("/api/v1/user/transactions/carts")

@@ -15,9 +15,9 @@ import androidx.credentials.exceptions.GetCredentialException;
 import com.example.learn.BuildConfig;
 import com.example.learn.common.constant.DatastoreConst;
 import com.example.learn.common.utils.DataStoreSingleton;
-import com.example.learn.shared.data.dto.ErrorDto;
 import com.example.learn.features.auth.data.dto.GoogleLoginDto;
 import com.example.learn.features.auth.domain.repository.AuthRepository;
+import com.example.learn.shared.data.dto.ErrorDto;
 import com.google.android.libraries.identity.googleid.GetGoogleIdOption;
 import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential;
 import com.google.gson.Gson;
@@ -58,13 +58,13 @@ public class GoogleLoginUseCase {
             public void onResult(GetCredentialResponse getCredentialResponse) {
                 Credential credential = getCredentialResponse.getCredential();
 
-                if(credential != null) {
-                    if(credential.getType().equals(GoogleIdTokenCredential.TYPE_GOOGLE_ID_TOKEN_CREDENTIAL)) {
+                if (credential != null) {
+                    if (credential.getType().equals(GoogleIdTokenCredential.TYPE_GOOGLE_ID_TOKEN_CREDENTIAL)) {
                         GoogleIdTokenCredential googleIdTokenCredential = GoogleIdTokenCredential.createFrom(credential.getData());
                         authRepository.googleLogin(new GoogleLoginDto.Body(googleIdTokenCredential.getIdToken())).enqueue(new Callback<GoogleLoginDto.Response>() {
                             @Override
                             public void onResponse(Call<GoogleLoginDto.Response> call, Response<GoogleLoginDto.Response> response) {
-                                if(response.isSuccessful()) {
+                                if (response.isSuccessful()) {
                                     GoogleLoginDto.Response data = response.body();
 
                                     DataStoreSingleton dataStoreSingleton = DataStoreSingleton.getInstance();
@@ -105,6 +105,7 @@ public class GoogleLoginUseCase {
 
     public interface ExecuteCb {
         void onSuccess(GoogleLoginDto.Response response);
+
         void onFailure(String msg);
     }
 }

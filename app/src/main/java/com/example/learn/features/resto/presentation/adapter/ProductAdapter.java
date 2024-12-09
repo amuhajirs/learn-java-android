@@ -17,11 +17,10 @@ import androidx.lifecycle.LiveData;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-
 import com.example.learn.R;
-import com.example.learn.features.resto.data.dto.ProductDto;
 import com.example.learn.common.constant.ViewConst;
 import com.example.learn.common.utils.StringUtils;
+import com.example.learn.features.resto.data.dto.ProductDto;
 
 import java.util.List;
 import java.util.Map;
@@ -59,7 +58,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
     @NonNull
     @Override
     public ProductViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        if(viewType == ViewConst.VIEW_TYPE_SKELETON) {
+        if (viewType == ViewConst.VIEW_TYPE_SKELETON) {
             View view = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.skeleton_card_product, parent, false);
             return new ProductViewHolder(view, viewType);
@@ -92,7 +91,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
         holder.productLike.setText(String.valueOf(product.like));
         holder.quantity.setText(viewModel.getQuantities().getValue().getOrDefault(product.id, 0).toString());
 
-        if(product.stock == 0) {
+        if (product.stock == 0) {
             holder.btnProduct.setVisibility(View.GONE);
             holder.emptyStock.setVisibility(View.VISIBLE);
         }
@@ -125,7 +124,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
 
     @Override
     public int getItemCount() {
-        if(isLoading) {
+        if (isLoading) {
             return 3;
         }
 
@@ -133,6 +132,16 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
             return 0;
         }
         return products.size();
+    }
+
+    public interface OnClickProduct {
+        void onItemClick(ProductDto product);
+    }
+
+    public interface QuantitiesViewModel {
+        LiveData<Map<Integer, Integer>> getQuantities();
+
+        void updateQuantity(int productId, int quantity);
     }
 
     public static class ProductViewHolder extends RecyclerView.ViewHolder {
@@ -145,7 +154,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
         public ProductViewHolder(@NonNull View itemView, int viewType) {
             super(itemView);
 
-            if(viewType == ViewConst.VIEW_TYPE_SKELETON) {
+            if (viewType == ViewConst.VIEW_TYPE_SKELETON) {
                 return;
             }
 
@@ -161,14 +170,5 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
             quantity = itemView.findViewById(R.id.quantity);
             cardProduct = (CardView) itemView;
         }
-    }
-
-    public interface OnClickProduct {
-        public void onItemClick(ProductDto product);
-    }
-
-    public interface QuantitiesViewModel {
-        public LiveData<Map<Integer, Integer>> getQuantities();
-        void updateQuantity(int productId, int quantity);
     }
 }

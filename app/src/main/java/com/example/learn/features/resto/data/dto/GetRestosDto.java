@@ -2,12 +2,12 @@ package com.example.learn.features.resto.data.dto;
 
 public class GetRestosDto {
     static public class Query {
-        public String search= "";
-        public String page="1";
-        public String limit="10";
-        public String order="rating_avg";
-        public String direction="desc";
-        public String categoryId="";
+        public String search = "";
+        public String page = "1";
+        public String limit = "10";
+        public String order = "rating_avg";
+        public String direction = "desc";
+        public String categoryId = "";
 
         public Query() {
         }

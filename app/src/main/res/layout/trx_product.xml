@@ -6,7 +6,7 @@
     android:layout_marginBottom="10dp">
 
     <androidx.cardview.widget.CardView
-        android:id="@+id/cardView5"
+        android:id="@+id/resto_avatar_wrapper"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:backgroundTint="@android:color/transparent"
@@ -34,8 +34,8 @@
         android:maxLines="2"
         android:text="Mie Ayam"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/cardView5"
-        app:layout_constraintTop_toTopOf="@+id/cardView5" />
+        app:layout_constraintStart_toEndOf="@+id/resto_avatar_wrapper"
+        app:layout_constraintTop_toTopOf="@+id/resto_avatar_wrapper" />
 
     <TextView
         android:id="@+id/product_amount"

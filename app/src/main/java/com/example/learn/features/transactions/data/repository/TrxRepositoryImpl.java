@@ -17,12 +17,14 @@ public class TrxRepositoryImpl implements TrxRepository {
 
     public Call<GetTransactionDto.Response> getTransactions(String search) {
         return trxApi.getTransactions(search, "1", "10", "created_at", "desc", "");
-    };
+    }
+
     public Call<CreateCartDto.Response> createCart(CreateCartDto.Body body) {
         return trxApi.createCart(body);
-    };
+    }
 
     public Call<CreateOrderDto.Response> createOrder(CreateOrderDto.Body body) {
         return trxApi.createOrder(body);
-    };
+    }
+
 }

@@ -11,7 +11,6 @@ import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.FrameLayout;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -24,16 +23,15 @@ import androidx.core.graphics.ColorUtils;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.learn.R;
 import com.example.learn.common.utils.ArrayUtils;
+import com.example.learn.databinding.BottomSheetFilterBinding;
+import com.example.learn.databinding.FragmentTrxBinding;
+import com.example.learn.features.main.presentation.interfaces.OnFragmentActionListener;
 import com.example.learn.features.transactions.domain.model.Filter;
 import com.example.learn.features.transactions.domain.model.FilterTransactions;
 import com.example.learn.features.transactions.presentation.adapter.TrxRestoAdapter;
-import com.example.learn.features.main.presentation.interfaces.OnFragmentActionListener;
-import com.example.learn.shared.presentation.widget.CustomActionBar;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 
@@ -43,21 +41,6 @@ import dagger.hilt.android.AndroidEntryPoint;
 
 @AndroidEntryPoint
 public class TrxFragment extends Fragment {
-    private TrxViewModel viewModel;
-    private View filterStatus, filterCategory, filterDate, clearBtn;
-    private CustomActionBar actionBar;
-    private RecyclerView trxRestoRecycler;
-    private TrxRestoAdapter trxRestoAdapter;
-    private OnFragmentActionListener listener;
-    private Fragment homeFragment;
-    private BottomNavigationView bottomNavigationView;
-    private SwipeRefreshLayout swipeRefreshLayout;
-    private ImageButton closeStatusDialog;
-    private BottomSheetDialog bottomSheetDialog;
-    private RadioGroup sheetFilterGroup;
-    private TextView sheetTitle, filterStatusLabel, filterCategoryLabel, filterDateLabel;
-    private ImageView filterStatusIcon, filterCategoryIcon, filterDateIcon;
-
     private final Filter[] STATUS = {
             new Filter("Semua Status", ""),
             new Filter("Menunggu Konfirmasi", "WAITING"),
@@ -72,12 +55,19 @@ public class TrxFragment extends Fragment {
             new Filter("Minuman", "2"),
             new Filter("Jajanan", "3"),
     };
-
     private final Filter[] DATE = {
             new Filter("Semua Tanggal", ""),
             new Filter("30 Hari Terakhir", "1"),
             new Filter("90 Hari Terakhir", "2"),
     };
+    private TrxViewModel viewModel;
+    private FragmentTrxBinding binding;
+    private BottomSheetFilterBinding bottomSheetBinding;
+    private TrxRestoAdapter trxRestoAdapter;
+    private OnFragmentActionListener listener;
+    private Fragment homeFragment;
+    private BottomNavigationView bottomNavigationView;
+    private BottomSheetDialog bottomSheetDialog;
 
     public TrxFragment() {
     }
@@ -93,39 +83,24 @@ public class TrxFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_trx, container, false);
+        binding = FragmentTrxBinding.inflate(getLayoutInflater());
+
         viewModel = new ViewModelProvider(this).get(TrxViewModel.class);
 
-        actionBar = view.findViewById(R.id.action_bar);
-        trxRestoRecycler = view.findViewById(R.id.trx_resto_recycler);
-        swipeRefreshLayout = view.findViewById(R.id.refresh);
+        binding.refresh.setColorSchemeColors(ContextCompat.getColor(requireContext(), R.color.primary));
 
-        clearBtn = view.findViewById(R.id.clear_btn);
-        filterStatus = view.findViewById(R.id.filter_status);
-        filterCategory = view.findViewById(R.id.filter_category);
-        filterDate = view.findViewById(R.id.filter_date);
-
-        filterStatusLabel = filterStatus.findViewById(R.id.filter_status_label);
-        filterStatusIcon = filterStatus.findViewById(R.id.filter_status_icon);
-        filterCategoryLabel = filterCategory.findViewById(R.id.filter_category_label);
-        filterCategoryIcon = filterCategory.findViewById(R.id.filter_category_icon);
-        filterDateLabel = filterDate.findViewById(R.id.filter_date_label);
-        filterDateIcon = filterDate.findViewById(R.id.filter_date_icon);
-
-        swipeRefreshLayout.setColorSchemeColors(ContextCompat.getColor(requireContext(), R.color.primary));
-
-        trxRestoRecycler.setLayoutManager(new LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false));
-        trxRestoRecycler.setNestedScrollingEnabled(false);
+        binding.trxRestoRecycler.setLayoutManager(new LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false));
+        binding.trxRestoRecycler.setNestedScrollingEnabled(false);
 
         trxRestoAdapter = new TrxRestoAdapter(requireContext());
-        trxRestoRecycler.setAdapter(trxRestoAdapter);
+        binding.trxRestoRecycler.setAdapter(trxRestoAdapter);
 
         initBottomSheet();
 
         listeners();
         stateObserver();
 
-        return view;
+        return binding.getRoot();
     }
 
     @Override
@@ -134,20 +109,20 @@ public class TrxFragment extends Fragment {
         if (context instanceof OnFragmentActionListener) {
             listener = (OnFragmentActionListener) context;
         } else {
-            throw new RuntimeException(context.toString() + " must implement OnFragmentActionListener");
+            throw new RuntimeException(context + " must implement OnFragmentActionListener");
         }
     }
 
     private void listeners() {
-        actionBar.getBackButton().setOnClickListener(v -> {
+        binding.actionBar.getBackButton().setOnClickListener(v -> {
             listener.switchFragment(homeFragment);
             bottomNavigationView.setSelectedItemId(R.id.nav_home);
         });
 
-        actionBar.getSearchInput().setOnEditorActionListener((v, actionId, event) -> {
+        binding.actionBar.getSearchInput().setOnEditorActionListener((v, actionId, event) -> {
             if (actionId == EditorInfo.IME_ACTION_SEARCH ||
                     (event != null && event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) {
-                String query = actionBar.getSearchInput().getText().toString();
+                String query = binding.actionBar.getSearchInput().getText().toString();
                 viewModel.updateSearchFilter(query);
 
                 InputMethodManager imm = (InputMethodManager) v.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -159,23 +134,14 @@ public class TrxFragment extends Fragment {
             return false;
         });
 
-        swipeRefreshLayout.setOnRefreshListener(() -> viewModel.fetchGetTransactions());
+        binding.refresh.setOnRefreshListener(() -> viewModel.fetchGetTransactions());
 
-        filterStatus.setOnClickListener(v -> renderRadioFilter("Mau lihat status apa?", STATUS, R.id.filter_status));
-        filterCategory.setOnClickListener(v -> renderRadioFilter("Mau lihat kategori apa?", CATEGORY, R.id.filter_category));
-        filterDate.setOnClickListener(v -> renderRadioFilter("Pilih tanggal", DATE, R.id.filter_date));
+        binding.filterStatus.setOnClickListener(v -> renderRadioFilter("Mau lihat status apa?", STATUS, R.id.filter_status));
+        binding.filterCategory.setOnClickListener(v -> renderRadioFilter("Mau lihat kategori apa?", CATEGORY, R.id.filter_category));
+        binding.filterDate.setOnClickListener(v -> renderRadioFilter("Pilih tanggal", DATE, R.id.filter_date));
 
-        sheetFilterGroup.setOnCheckedChangeListener(this::handleChangeSelectedFilter);
-        clearBtn.setOnClickListener(v -> {
-            viewModel.clearFilter();
-            setNotActiveFilter(filterStatus, filterStatusLabel, filterStatusIcon);
-            setNotActiveFilter(filterCategory, filterCategoryLabel, filterCategoryIcon);
-            setNotActiveFilter(filterDate, filterDateLabel, filterDateIcon);
-
-            filterStatusLabel.setText(STATUS[0].label);
-            filterCategoryLabel.setText(CATEGORY[0].label);
-            filterDateLabel.setText(DATE[0].label);
-        });
+        bottomSheetBinding.filterGroup.setOnCheckedChangeListener(this::handleChangeSelectedFilter);
+        binding.clearBtn.setOnClickListener(v -> handleClearFilter());
     }
 
     private void stateObserver() {
@@ -186,20 +152,20 @@ public class TrxFragment extends Fragment {
                     break;
                 case SUCCESS:
                     trxRestoAdapter.setTransaction(Arrays.asList(transactionsState.getData().data));
-                    swipeRefreshLayout.setRefreshing(false);
+                    binding.refresh.setRefreshing(false);
                     break;
                 case ERROR:
                     Toast.makeText(requireContext(), transactionsState.getMessage(), Toast.LENGTH_LONG).show();
-                    swipeRefreshLayout.setRefreshing(false);
+                    binding.refresh.setRefreshing(false);
                     break;
             }
         });
 
         viewModel.getFilterTrx().observe(getViewLifecycleOwner(), filterTrx -> {
-            if(!filterTrx.status.isEmpty() || !filterTrx.categoryId.isEmpty() || !filterTrx.date.isEmpty()) {
-                clearBtn.setVisibility(View.VISIBLE);
+            if (!filterTrx.status.isEmpty() || !filterTrx.categoryId.isEmpty() || !filterTrx.date.isEmpty()) {
+                binding.clearBtn.setVisibility(View.VISIBLE);
             } else {
-                clearBtn.setVisibility(View.GONE);
+                binding.clearBtn.setVisibility(View.GONE);
             }
 
             viewModel.fetchGetTransactions();
@@ -208,12 +174,9 @@ public class TrxFragment extends Fragment {
 
     private void initBottomSheet() {
         bottomSheetDialog = new BottomSheetDialog(requireContext());
-        View bottomSheetView = LayoutInflater.from(requireContext()).inflate(
-                R.layout.bottom_sheet_filter,
-                null
-        );
+        bottomSheetBinding = BottomSheetFilterBinding.inflate(getLayoutInflater());
 
-        bottomSheetDialog.setContentView(bottomSheetView);
+        bottomSheetDialog.setContentView(bottomSheetBinding.getRoot());
 
         bottomSheetDialog.setOnShowListener(dialog -> {
             BottomSheetDialog d = (BottomSheetDialog) dialog;
@@ -223,22 +186,30 @@ public class TrxFragment extends Fragment {
             }
         });
 
-        sheetTitle = bottomSheetView.findViewById(R.id.sheet_title);
-        sheetFilterGroup = bottomSheetView.findViewById(R.id.filter_group);
+        bottomSheetBinding.sheetCloseBtn.setOnClickListener(v -> bottomSheetDialog.hide());
+    }
 
-        closeStatusDialog = bottomSheetView.findViewById(R.id.status_close_btn);
-        closeStatusDialog.setOnClickListener(v -> bottomSheetDialog.hide());
+    private void handleClearFilter() {
+        viewModel.clearFilter();
+        setNotActiveFilter(binding.filterStatus, binding.filterStatusLabel, binding.filterStatusIcon);
+        setNotActiveFilter(binding.filterCategory, binding.filterCategoryLabel, binding.filterCategoryIcon);
+        setNotActiveFilter(binding.filterDate, binding.filterDateLabel, binding.filterDateIcon);
+
+        binding.filterStatusLabel.setText(STATUS[0].label);
+        binding.filterCategoryLabel.setText(CATEGORY[0].label);
+        binding.filterDateLabel.setText(DATE[0].label);
     }
 
     private void renderRadioFilter(String title, Filter[] filters, int id) {
-        sheetFilterGroup.removeAllViews();
-        sheetFilterGroup.setTag(id);
-        sheetTitle.setText(title);
+        bottomSheetBinding.filterGroup.removeAllViews();
+        bottomSheetBinding.filterGroup.setTag(id);
+        bottomSheetBinding.sheetTitle.setText(title);
 
         FilterTransactions currentFilter = viewModel.getFilterTrx().getValue();
 
-        for (Filter filter: filters) {
-            View radioButtonView = getLayoutInflater().from(requireContext()).inflate(R.layout.radio_button, sheetFilterGroup, false);
+        for (Filter filter : filters) {
+            getLayoutInflater();
+            View radioButtonView = LayoutInflater.from(requireContext()).inflate(R.layout.radio_button, bottomSheetBinding.filterGroup, false);
 
             RadioButton radioButton = radioButtonView.findViewById(R.id.radio_button);
             radioButton.setText(filter.label);
@@ -246,20 +217,20 @@ public class TrxFragment extends Fragment {
             radioButton.setId(View.generateViewId());
 
             if (id == R.id.filter_status) {
-                if(filter.value.equals(currentFilter.status)) {
+                if (filter.value.equals(currentFilter.status)) {
                     radioButton.setChecked(true);
                 }
             } else if (id == R.id.filter_category) {
-                if(filter.value.equals(currentFilter.categoryId)) {
+                if (filter.value.equals(currentFilter.categoryId)) {
                     radioButton.setChecked(true);
                 }
             } else {
-                if(filter.value.equals(currentFilter.date)) {
+                if (filter.value.equals(currentFilter.date)) {
                     radioButton.setChecked(true);
                 }
             }
 
-            sheetFilterGroup.addView(radioButton);
+            bottomSheetBinding.filterGroup.addView(radioButton);
         }
 
         bottomSheetDialog.show();
@@ -270,35 +241,35 @@ public class TrxFragment extends Fragment {
         if (selectedRadioButton != null) {
             String value = selectedRadioButton.getTag().toString();
 
-            if(group.getTag().toString().equals(String.valueOf(R.id.filter_status))) {
+            if (group.getTag().toString().equals(String.valueOf(R.id.filter_status))) {
                 viewModel.updateStatusFilter(value);
 
-                filterStatusLabel.setText(ArrayUtils.find(STATUS, item -> item.value == value).label);
+                binding.filterStatusLabel.setText(ArrayUtils.find(STATUS, item -> item.value == value).label);
 
                 if (value.isEmpty()) {
-                    setNotActiveFilter(filterStatus, filterStatusLabel, filterStatusIcon);
+                    setNotActiveFilter(binding.filterStatus, binding.filterStatusLabel, binding.filterStatusIcon);
                 } else {
-                    setActiveFilter(filterStatus, filterStatusLabel, filterStatusIcon);
+                    setActiveFilter(binding.filterStatus, binding.filterStatusLabel, binding.filterStatusIcon);
                 }
             } else if (group.getTag().toString().equals(String.valueOf(R.id.filter_category))) {
                 viewModel.updateCategoryFilter(value);
 
-                filterCategoryLabel.setText(ArrayUtils.find(CATEGORY, item -> item.value == value).label);
+                binding.filterCategoryLabel.setText(ArrayUtils.find(CATEGORY, item -> item.value == value).label);
 
                 if (value.isEmpty()) {
-                    setNotActiveFilter(filterCategory, filterCategoryLabel, filterCategoryIcon);
+                    setNotActiveFilter(binding.filterCategory, binding.filterCategoryLabel, binding.filterCategoryIcon);
                 } else {
-                    setActiveFilter(filterCategory, filterCategoryLabel, filterCategoryIcon);
+                    setActiveFilter(binding.filterCategory, binding.filterCategoryLabel, binding.filterCategoryIcon);
                 }
             } else {
                 viewModel.updateDateFilter(value);
 
-                filterDateLabel.setText(ArrayUtils.find(DATE, item -> item.value == value).label);
+                binding.filterDateLabel.setText(ArrayUtils.find(DATE, item -> item.value == value).label);
 
                 if (value.isEmpty()) {
-                    setNotActiveFilter(filterDate, filterDateLabel, filterDateIcon);
+                    setNotActiveFilter(binding.filterDate, binding.filterDateLabel, binding.filterDateIcon);
                 } else {
-                    setActiveFilter(filterDate, filterDateLabel, filterDateIcon);
+                    setActiveFilter(binding.filterDate, binding.filterDateLabel, binding.filterDateIcon);
                 }
             }
         }

@@ -11,9 +11,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.learn.R;
-import com.example.learn.features.transactions.data.dto.OrderItemDto;
 import com.example.learn.common.constant.ViewConst;
 import com.example.learn.common.utils.StringUtils;
+import com.example.learn.features.transactions.data.dto.OrderItemDto;
 
 import java.util.List;
 
@@ -43,7 +43,7 @@ public class TrxProductAdapter extends RecyclerView.Adapter<TrxProductAdapter.Tr
     @NonNull
     @Override
     public TrxProductViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        if(viewType == ViewConst.VIEW_TYPE_SKELETON) {
+        if (viewType == ViewConst.VIEW_TYPE_SKELETON) {
             View view = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.skeleton_trx_product, parent, false);
             return new TrxProductViewHolder(view, viewType);
@@ -56,25 +56,25 @@ public class TrxProductAdapter extends RecyclerView.Adapter<TrxProductAdapter.Tr
 
     @Override
     public void onBindViewHolder(@NonNull TrxProductViewHolder holder, int position) {
-        if(isLoading) {
+        if (isLoading) {
             return;
         }
 
         OrderItemDto trxProduct = trxProducts.get(position);
 
         Glide.with(holder.productImg.getContext())
-            .load(trxProduct.product.image)
-            .placeholder(R.drawable.img_placeholder)
-            .into(holder.productImg);
+                .load(trxProduct.product.image)
+                .placeholder(R.drawable.img_placeholder)
+                .into(holder.productImg);
 
         holder.productName.setText(trxProduct.product.name);
         holder.productAmount.setText(StringUtils.formatCurrency(trxProduct.product.price));
-        holder.productQuantity.setText("(x" + String.valueOf(trxProduct.quantity) + ")");
+        holder.productQuantity.setText("(x" + trxProduct.quantity + ")");
     }
 
     @Override
     public int getItemCount() {
-        if(isLoading) {
+        if (isLoading) {
             return 2;
         }
 
@@ -92,7 +92,7 @@ public class TrxProductAdapter extends RecyclerView.Adapter<TrxProductAdapter.Tr
         public TrxProductViewHolder(@NonNull View itemView, int viewType) {
             super(itemView);
 
-            if(viewType == ViewConst.VIEW_TYPE_SKELETON) {
+            if (viewType == ViewConst.VIEW_TYPE_SKELETON) {
                 return;
             }
 

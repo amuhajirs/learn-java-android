@@ -7,5 +7,6 @@ public class Filter {
     public Filter(String label, String value) {
         this.label = label;
         this.value = value;
-    };
+    }
+
 }

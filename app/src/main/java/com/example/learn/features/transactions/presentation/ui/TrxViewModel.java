@@ -6,11 +6,11 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.example.learn.shared.data.dto.ErrorDto;
+import com.example.learn.common.utils.Resource;
 import com.example.learn.features.transactions.data.dto.GetTransactionDto;
 import com.example.learn.features.transactions.domain.model.FilterTransactions;
 import com.example.learn.features.transactions.domain.usecase.GetTransactionsUseCase;
-import com.example.learn.common.utils.Resource;
+import com.example.learn.shared.data.dto.ErrorDto;
 import com.google.gson.Gson;
 
 import javax.inject.Inject;
@@ -32,7 +32,7 @@ public class TrxViewModel extends ViewModel {
     }
 
     public LiveData<Resource<GetTransactionDto.Response>> getTransactionsState() {
-        if(transactionsState.getValue() == null) {
+        if (transactionsState.getValue() == null) {
             fetchGetTransactions();
         }
 
@@ -77,7 +77,7 @@ public class TrxViewModel extends ViewModel {
         getTransactionsUseCase.execute(filterTrx.getValue().search, new Callback<GetTransactionDto.Response>() {
             @Override
             public void onResponse(Call<GetTransactionDto.Response> call, Response<GetTransactionDto.Response> response) {
-                if(response.isSuccessful()) {
+                if (response.isSuccessful()) {
                     transactionsState.postValue(Resource.success(response.body()));
                 } else {
                     try {

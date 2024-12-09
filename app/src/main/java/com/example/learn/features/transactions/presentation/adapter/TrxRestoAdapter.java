@@ -16,15 +16,15 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.learn.R;
-import com.example.learn.features.transactions.data.dto.OrderDto;
 import com.example.learn.common.constant.ViewConst;
 import com.example.learn.common.utils.StringUtils;
+import com.example.learn.features.transactions.data.dto.OrderDto;
 
 import java.util.Arrays;
 import java.util.List;
 
 public class TrxRestoAdapter extends RecyclerView.Adapter<TrxRestoAdapter.TrxRestoViewHolder> {
-    private Context context;
+    private final Context context;
     private List<OrderDto> transactions;
     private boolean isLoading = true;
 
@@ -51,7 +51,7 @@ public class TrxRestoAdapter extends RecyclerView.Adapter<TrxRestoAdapter.TrxRes
     @NonNull
     @Override
     public TrxRestoViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        if(viewType == ViewConst.VIEW_TYPE_SKELETON) {
+        if (viewType == ViewConst.VIEW_TYPE_SKELETON) {
             View view = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.skeleton_card_trx_resto, parent, false);
             return new TrxRestoViewHolder(view, context, viewType);
@@ -67,7 +67,7 @@ public class TrxRestoAdapter extends RecyclerView.Adapter<TrxRestoAdapter.TrxRes
         TrxProductAdapter trxProductAdapter = new TrxProductAdapter();
         holder.trxProductRecycler.setAdapter(trxProductAdapter);
 
-        if(isLoading) {
+        if (isLoading) {
             trxProductAdapter.setLoading(isLoading);
             return;
         }
@@ -120,7 +120,7 @@ public class TrxRestoAdapter extends RecyclerView.Adapter<TrxRestoAdapter.TrxRes
 
     @Override
     public int getItemCount() {
-        if(isLoading) {
+        if (isLoading) {
             return 5;
         }
 

@@ -48,7 +48,8 @@
                     app:cardCornerRadius="8dp"
                     app:cardElevation="0dp"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/resto_banner">
+                    app:layout_constraintTop_toBottomOf="@id/resto_banner"
+                    android:transitionName="shared_image">
 
                     <ImageView
                         android:id="@+id/resto_avatar"

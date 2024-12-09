@@ -4,14 +4,12 @@ import com.google.gson.annotations.SerializedName;
 
 public class CreateOrderDto {
     static public class Body {
-        @SerializedName("cart_id")
-        public int cartId;
-
         @SerializedName("payment_method")
         final public String paymentMethod = "CASH";
-
         @SerializedName("is_preorder")
         final public boolean isPreorder = false;
+        @SerializedName("cart_id")
+        public int cartId;
 
         public Body(int cartId) {
             this.cartId = cartId;

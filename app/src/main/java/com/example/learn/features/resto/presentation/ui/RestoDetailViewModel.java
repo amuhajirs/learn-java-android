@@ -7,16 +7,16 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.SavedStateHandle;
 import androidx.lifecycle.ViewModel;
 
-import com.example.learn.shared.data.dto.ErrorDto;
+import com.example.learn.common.utils.Resource;
 import com.example.learn.features.resto.data.dto.GetProductsDto;
 import com.example.learn.features.resto.data.dto.ProductDto;
 import com.example.learn.features.resto.data.dto.ProductsPerCategory;
+import com.example.learn.features.resto.domain.usecase.GetProductsUseCase;
+import com.example.learn.features.resto.presentation.adapter.ProductAdapter;
 import com.example.learn.features.transactions.data.dto.CreateCartDto;
 import com.example.learn.features.transactions.data.dto.CreateOrderDto;
 import com.example.learn.features.transactions.domain.usecase.CreateOrderUseCase;
-import com.example.learn.features.resto.domain.usecase.GetProductsUseCase;
-import com.example.learn.common.utils.Resource;
-import com.example.learn.features.resto.presentation.adapter.ProductAdapter;
+import com.example.learn.shared.data.dto.ErrorDto;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
@@ -101,8 +101,8 @@ public class RestoDetailViewModel extends ViewModel implements ProductAdapter.Qu
         ProductsPerCategory[] productCategories = productsState.getValue().getData().data;
 
         if (currentQuantities != null) {
-            for (ProductsPerCategory productCategory: productCategories) {
-                for (ProductDto product: productCategory.data) {
+            for (ProductsPerCategory productCategory : productCategories) {
+                for (ProductDto product : productCategory.data) {
                     Integer quantity = currentQuantities.get(product.id);
                     if (quantity != null) {
                         total += product.price * quantity;
@@ -120,7 +120,7 @@ public class RestoDetailViewModel extends ViewModel implements ProductAdapter.Qu
         getProductsUseCase.execute(restaurantId, query.getValue(), new Callback<GetProductsDto.Response>() {
             @Override
             public void onResponse(Call<GetProductsDto.Response> call, Response<GetProductsDto.Response> response) {
-                if(response.isSuccessful()) {
+                if (response.isSuccessful()) {
                     productsState.postValue(Resource.success(response.body()));
                 } else {
                     try {

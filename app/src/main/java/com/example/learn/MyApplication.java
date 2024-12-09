@@ -1,4 +1,4 @@
-package com.example.learn.core;
+package com.example.learn;
 
 import android.app.Application;
 

@@ -44,7 +44,7 @@ public class SplashActivity extends AppCompatActivity {
         Handler handler = new Handler();
         viewModel.checkAuth(new SplashViewModel.CheckAuthCb() {
             @Override
-            public void onAuthenticated(GetProfileDto  response) {
+            public void onAuthenticated(GetProfileDto response) {
                 delayNavigation(MainActivity.class, handler);
             }
 

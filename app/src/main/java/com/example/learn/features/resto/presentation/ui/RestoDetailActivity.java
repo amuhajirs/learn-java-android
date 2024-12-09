@@ -2,6 +2,7 @@ package com.example.learn.features.resto.presentation.ui;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.transition.TransitionInflater;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,10 +23,12 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.bumptech.glide.Glide;
 import com.example.learn.R;
+import com.example.learn.common.utils.StringUtils;
+import com.example.learn.databinding.ActivityRestoDetailBinding;
+import com.example.learn.databinding.BottomSheetRestoDetailBinding;
 import com.example.learn.features.resto.data.dto.CategoryDto;
 import com.example.learn.features.resto.data.dto.GetProductsDto;
 import com.example.learn.features.resto.data.dto.ProductDto;
-import com.example.learn.common.utils.StringUtils;
 import com.example.learn.features.resto.presentation.adapter.CategoryProductAdapter;
 import com.example.learn.shared.presentation.widget.CustomActionBar;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
@@ -37,61 +40,41 @@ import dagger.hilt.android.AndroidEntryPoint;
 
 @AndroidEntryPoint
 public class RestoDetailActivity extends AppCompatActivity {
+    private ActivityRestoDetailBinding binding;
+    private BottomSheetRestoDetailBinding bottomSheetBinding;
     private RestoDetailViewModel viewModel;
-    private View checkoutWrapper, checkoutBtn, sheetBtn;
-    private ImageView restoAvatar, restoBanner, sheetProductImg;
-    private TextView restoName, restoCategory, restoRating, restoRatingCount, totalQuantity, totalAmount, sheetProductName, sheetProductDesc, sheetProductSold, sheetProductLike, sheetProductPrice;
-    private TabLayout categoryTab;
-    private RecyclerView categoryProductRecycler;
     private CategoryProductAdapter categoryProductAdapter;
     private LinearLayoutManager categoryRecyclerLayoutManager;
     private BottomSheetDialog bottomSheetDialog;
-    private SwipeRefreshLayout swipeRefreshLayout;
-    private CustomActionBar actionBar;
     private boolean isTabClicked = false;
     private ProductDto selectedProduct = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_resto_detail);
+
+        binding = ActivityRestoDetailBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
 
         viewModel = new ViewModelProvider(this).get(RestoDetailViewModel.class);
 
-        actionBar = findViewById(R.id.action_bar);
+        binding.refresh.setColorSchemeColors(ContextCompat.getColor(this, R.color.primary));
 
-        swipeRefreshLayout = findViewById(R.id.refresh);
-        swipeRefreshLayout.setColorSchemeColors(ContextCompat.getColor(this, R.color.primary));
-
-        restoBanner = findViewById(R.id.resto_banner);
-        restoAvatar = findViewById(R.id.resto_avatar);
-        restoName = findViewById(R.id.resto_name);
-        restoCategory = findViewById(R.id.resto_category);
-        restoRating = findViewById(R.id.resto_rating);
-        restoRatingCount = findViewById(R.id.resto_rating_count);
-        categoryTab = findViewById(R.id.category_tab);
-
-        checkoutWrapper = findViewById(R.id.checkout_wrapper);
-        checkoutBtn = findViewById(R.id.checkout_btn);
-        totalQuantity = findViewById(R.id.total_quantity);
-        totalAmount = findViewById(R.id.total_amount);
-
-        categoryProductRecycler = findViewById(R.id.category_product_recycler);
         categoryRecyclerLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
-        categoryProductRecycler.setLayoutManager(categoryRecyclerLayoutManager);
-        categoryProductRecycler.setNestedScrollingEnabled(false);
+        binding.categoryProductRecycler.setLayoutManager(categoryRecyclerLayoutManager);
+        binding.categoryProductRecycler.setNestedScrollingEnabled(false);
 
         categoryProductAdapter = new CategoryProductAdapter(this, viewModel, this::handleBottomSheet);
-        categoryProductRecycler.setAdapter(categoryProductAdapter);
+        binding.categoryProductRecycler.setAdapter(categoryProductAdapter);
 
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
-            Glide.with(restoBanner.getContext()).load(extras.getString("banner")).placeholder(R.drawable.banner_home).into(restoBanner);
-            Glide.with(restoAvatar.getContext()).load(extras.getString("avatar")).placeholder(R.drawable.img_placeholder).into(restoAvatar);
-            restoName.setText(extras.getString("name"));
-            restoCategory.setText(extras.getString("category"));
-            restoRating.setText(String.format("%.1f", extras.getFloat("rating_avg")));
-            restoRatingCount.setText(String.format("(%d)", extras.getInt("rating_count")));
+            Glide.with(binding.restoBanner.getContext()).load(extras.getString("banner")).placeholder(R.drawable.banner_home).into(binding.restoBanner);
+            Glide.with(binding.restoAvatar.getContext()).load(extras.getString("avatar")).placeholder(R.drawable.img_placeholder).into(binding.restoAvatar);
+            binding.restoName.setText(extras.getString("name"));
+            binding.restoCategory.setText(extras.getString("category"));
+            binding.restoRating.setText(String.format("%.1f", extras.getFloat("rating_avg")));
+            binding.restoRatingCount.setText(String.format("(%d)", extras.getInt("rating_count")));
         } else {
             finish();
         }
@@ -102,12 +85,12 @@ public class RestoDetailActivity extends AppCompatActivity {
     }
 
     private void listeners() {
-        swipeRefreshLayout.setOnRefreshListener(() -> viewModel.fetchProducts());
-        checkoutBtn.setOnClickListener(v -> viewModel.fetchCheckout());
-        actionBar.getSearchInput().setOnEditorActionListener((v, actionId, event) -> {
+        binding.refresh.setOnRefreshListener(() -> viewModel.fetchProducts());
+        binding.checkoutBtn.setOnClickListener(v -> viewModel.fetchCheckout());
+        binding.actionBar.getSearchInput().setOnEditorActionListener((v, actionId, event) -> {
             if (actionId == EditorInfo.IME_ACTION_SEARCH ||
                     (event != null && event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) {
-                String query = actionBar.getSearchInput().getText().toString();
+                String query = binding.actionBar.getSearchInput().getText().toString();
                 viewModel.updateSearchQuery(query);
 
                 InputMethodManager imm = (InputMethodManager) v.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -127,19 +110,19 @@ public class RestoDetailActivity extends AppCompatActivity {
                     categoryProductAdapter.setLoading(true);
                     break;
                 case SUCCESS:
-                    categoryTab.removeAllTabs();
-                    for (CategoryDto category: productsState.getData().meta.categories) {
-                        categoryTab.addTab(categoryTab.newTab().setText(category.name));
+                    binding.categoryTab.removeAllTabs();
+                    for (CategoryDto category : productsState.getData().meta.categories) {
+                        binding.categoryTab.addTab(binding.categoryTab.newTab().setText(category.name));
                     }
 
                     categoryProductAdapter.setProductCategories(Arrays.asList(productsState.getData().data));
-                    categoryTab.addOnTabSelectedListener(handleSelectCategoryTab());
-                    categoryProductRecycler.addOnScrollListener(handleOnScrollCategoryRecycler());
-                    swipeRefreshLayout.setRefreshing(false);
+                    binding.categoryTab.addOnTabSelectedListener(handleSelectCategoryTab());
+                    binding.categoryProductRecycler.addOnScrollListener(handleOnScrollCategoryRecycler());
+                    binding.refresh.setRefreshing(false);
                     break;
                 case ERROR:
                     Toast.makeText(this, productsState.getMessage(), Toast.LENGTH_LONG).show();
-                    swipeRefreshLayout.setRefreshing(false);
+                    binding.refresh.setRefreshing(false);
                     break;
             }
         });
@@ -148,25 +131,25 @@ public class RestoDetailActivity extends AppCompatActivity {
             int totalQuantities = viewModel.getTotalQuantities();
 
             if (totalQuantities > 0) {
-                totalQuantity.setText(String.valueOf(totalQuantities));
-                totalAmount.setText(StringUtils.formatCurrency(viewModel.getTotalAmount()));
-                checkoutWrapper.setVisibility(View.VISIBLE);
+                binding.totalQuantity.setText(String.valueOf(totalQuantities));
+                binding.totalAmount.setText(StringUtils.formatCurrency(viewModel.getTotalAmount()));
+                binding.checkoutWrapper.setVisibility(View.VISIBLE);
             } else {
-                checkoutWrapper.setVisibility(View.GONE);
+                binding.checkoutWrapper.setVisibility(View.GONE);
             }
         });
 
         viewModel.getCheckoutState().observe(this, checkoutState -> {
             switch (checkoutState.getStatus()) {
                 case LOADING:
-                    checkoutBtn.setEnabled(false);
+                    binding.checkoutBtn.setEnabled(false);
                     break;
                 case SUCCESS:
-                    checkoutBtn.setEnabled(true);
+                    binding.checkoutBtn.setEnabled(true);
                     Toast.makeText(this, checkoutState.getData().message, Toast.LENGTH_LONG).show();
                     break;
                 case ERROR:
-                    checkoutBtn.setEnabled(true);
+                    binding.checkoutBtn.setEnabled(true);
                     Toast.makeText(this, checkoutState.getMessage(), Toast.LENGTH_LONG).show();
                     break;
             }
@@ -179,12 +162,9 @@ public class RestoDetailActivity extends AppCompatActivity {
 
     private void initBottomSheet() {
         bottomSheetDialog = new BottomSheetDialog(this);
-        View bottomSheetView = LayoutInflater.from(this).inflate(
-                R.layout.bottom_sheet_resto_detail,
-                null
-        );
 
-        bottomSheetDialog.setContentView(bottomSheetView);
+        bottomSheetBinding = BottomSheetRestoDetailBinding.inflate(getLayoutInflater());
+        bottomSheetDialog.setContentView(bottomSheetBinding.getRoot());
 
         bottomSheetDialog.setOnShowListener(dialog -> {
             BottomSheetDialog d = (BottomSheetDialog) dialog;
@@ -194,16 +174,8 @@ public class RestoDetailActivity extends AppCompatActivity {
             }
         });
 
-        sheetProductImg = bottomSheetView.findViewById(R.id.sheet_product_img);
-        sheetProductName = bottomSheetView.findViewById(R.id.sheet_product_name);
-        sheetProductSold = bottomSheetView.findViewById(R.id.sheet_product_sold);
-        sheetProductLike = bottomSheetView.findViewById(R.id.sheet_product_like);
-        sheetProductPrice = bottomSheetView.findViewById(R.id.sheet_product_price);
-        sheetProductDesc = bottomSheetView.findViewById(R.id.sheet_product_desc);
-        sheetBtn = bottomSheetView.findViewById(R.id.sheet_add_btn);
-
-        sheetBtn.setOnClickListener(v -> {
-            if(selectedProduct != null) {
+        bottomSheetBinding.sheetAddBtn.setOnClickListener(v -> {
+            if (selectedProduct != null) {
                 int currentQty = viewModel.getQuantities().getValue().getOrDefault(selectedProduct.id, 0);
                 if (currentQty < selectedProduct.stock) {
                     viewModel.updateQuantity(selectedProduct.id, currentQty + 1);
@@ -215,12 +187,12 @@ public class RestoDetailActivity extends AppCompatActivity {
     }
 
     public void handleBottomSheet(ProductDto product) {
-        Glide.with(this).load(product.image).into(sheetProductImg);
-        sheetProductName.setText(product.name);
-        sheetProductSold.setText(String.valueOf(product.sold));
-        sheetProductLike.setText(String.valueOf(product.like));
-        sheetProductPrice.setText(StringUtils.formatCurrency(product.price));
-        sheetProductDesc.setText(product.description);
+        Glide.with(this).load(product.image).into(bottomSheetBinding.sheetProductImg);
+        bottomSheetBinding.sheetProductName.setText(product.name);
+        bottomSheetBinding.sheetProductSold.setText(String.valueOf(product.sold));
+        bottomSheetBinding.sheetProductLike.setText(String.valueOf(product.like));
+        bottomSheetBinding.sheetProductPrice.setText(StringUtils.formatCurrency(product.price));
+        bottomSheetBinding.sheetProductDesc.setText(product.description);
         selectedProduct = product;
 
         bottomSheetDialog.show();
@@ -232,16 +204,16 @@ public class RestoDetailActivity extends AppCompatActivity {
             public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
 
-                if(!isTabClicked) {
+                if (!isTabClicked) {
                     int firstVisiblePosition = categoryRecyclerLayoutManager.findFirstVisibleItemPosition();
                     int cumulativeCount = 0;
                     GetProductsDto.Response categories = viewModel.getProducts().getValue().getData();
 
-                    if(categories != null) {
+                    if (categories != null) {
                         for (int i = 0; i < categories.data.length; i++) {
                             cumulativeCount += categories.data[i].data.length;
                             if (firstVisiblePosition < cumulativeCount) {
-                                categoryTab.selectTab(categoryTab.getTabAt(i));
+                                binding.categoryTab.selectTab(binding.categoryTab.getTabAt(i));
                                 break;
                             }
                         }
@@ -264,7 +236,7 @@ public class RestoDetailActivity extends AppCompatActivity {
                     startPosition += viewModel.getProducts().getValue().getData().data[i].data.length;
                 }
 
-                categoryProductRecycler.smoothScrollToPosition(startPosition);
+                binding.categoryProductRecycler.smoothScrollToPosition(startPosition);
                 isTabClicked = false;
             }
 

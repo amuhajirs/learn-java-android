@@ -7,5 +7,6 @@ import retrofit2.Call;
 
 public interface RestoRepository {
     Call<GetRestosDto.Response> getRestos(GetRestosDto.Query query);
+
     Call<GetProductsDto.Response> getProducts(int restaurantId, GetProductsDto.Query query);
 }

@@ -1,14 +1,14 @@
 package com.example.learn.core.di;
 
-import com.example.learn.features.auth.data.api.AuthApi;
-import com.example.learn.features.resto.data.api.RestoApi;
 import com.example.learn.core.api.RetrofitClient;
-import com.example.learn.features.transactions.data.api.TrxApi;
+import com.example.learn.features.auth.data.api.AuthApi;
 import com.example.learn.features.auth.data.repository.AuthRepositoryImpl;
-import com.example.learn.features.resto.data.repository.RestoRepositoryImpl;
-import com.example.learn.features.transactions.data.repository.TrxRepositoryImpl;
 import com.example.learn.features.auth.domain.repository.AuthRepository;
+import com.example.learn.features.resto.data.api.RestoApi;
+import com.example.learn.features.resto.data.repository.RestoRepositoryImpl;
 import com.example.learn.features.resto.domain.repository.RestoRepository;
+import com.example.learn.features.transactions.data.api.TrxApi;
+import com.example.learn.features.transactions.data.repository.TrxRepositoryImpl;
 import com.example.learn.features.transactions.domain.repository.TrxRepository;
 
 import javax.inject.Singleton;

@@ -11,8 +11,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.learn.R;
-import com.example.learn.features.resto.data.dto.ProductsPerCategory;
 import com.example.learn.common.constant.ViewConst;
+import com.example.learn.features.resto.data.dto.ProductsPerCategory;
 
 import java.util.Arrays;
 import java.util.List;
@@ -50,7 +50,7 @@ public class CategoryProductAdapter extends RecyclerView.Adapter<CategoryProduct
     @NonNull
     @Override
     public CategoryProductViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        if(viewType == ViewConst.VIEW_TYPE_SKELETON) {
+        if (viewType == ViewConst.VIEW_TYPE_SKELETON) {
             View view = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.skeleton_category_product, parent, false);
             return new CategoryProductViewHolder(view, context, viewType);
@@ -66,7 +66,7 @@ public class CategoryProductAdapter extends RecyclerView.Adapter<CategoryProduct
         ProductAdapter productAdapter = new ProductAdapter(context, viewModel, onClickProduct);
         holder.productRecycler.setAdapter(productAdapter);
 
-        if(isLoading) {
+        if (isLoading) {
             productAdapter.setLoading(isLoading);
             return;
         }
@@ -83,7 +83,7 @@ public class CategoryProductAdapter extends RecyclerView.Adapter<CategoryProduct
 
     @Override
     public int getItemCount() {
-        if(isLoading) {
+        if (isLoading) {
             return 3;
         }
 
@@ -105,7 +105,7 @@ public class CategoryProductAdapter extends RecyclerView.Adapter<CategoryProduct
             productRecycler.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false));
             productRecycler.setNestedScrollingEnabled(false);
 
-            if(viewType == ViewConst.VIEW_TYPE_SKELETON) {
+            if (viewType == ViewConst.VIEW_TYPE_SKELETON) {
                 return;
             }
 

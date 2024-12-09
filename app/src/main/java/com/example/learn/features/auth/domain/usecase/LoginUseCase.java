@@ -1,10 +1,10 @@
 package com.example.learn.features.auth.domain.usecase;
 
-import com.example.learn.shared.data.dto.ErrorDto;
-import com.example.learn.features.auth.data.dto.LoginDto;
-import com.example.learn.features.auth.domain.repository.AuthRepository;
 import com.example.learn.common.constant.DatastoreConst;
 import com.example.learn.common.utils.DataStoreSingleton;
+import com.example.learn.features.auth.data.dto.LoginDto;
+import com.example.learn.features.auth.domain.repository.AuthRepository;
+import com.example.learn.shared.data.dto.ErrorDto;
 import com.google.gson.Gson;
 
 import java.io.IOException;
@@ -61,6 +61,7 @@ public class LoginUseCase {
 
     public interface ExecuteCb {
         void onSuccess(LoginDto.Response response);
+
         void onFailure(String msg);
     }
 }

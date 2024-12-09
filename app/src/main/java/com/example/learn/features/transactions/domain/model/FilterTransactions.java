@@ -1,12 +1,13 @@
 package com.example.learn.features.transactions.domain.model;
 
 public class FilterTransactions {
-    public String search="";
-    public String status="";
-    public String categoryId="";
-    public String date="";
+    public String search = "";
+    public String status = "";
+    public String categoryId = "";
+    public String date = "";
 
-    public FilterTransactions() {}
+    public FilterTransactions() {
+    }
 
     public FilterTransactions(String search, String status, String categoryId, String date) {
         this.search = search;

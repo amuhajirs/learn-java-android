@@ -1,12 +1,9 @@
 package com.example.learn.common.utils;
 
 public class Resource<T> {
-    public enum Status { LOADING, SUCCESS, ERROR }
-
     private final Status status;
     private final T data;
     private final String message;
-
     private Resource(Status status, T data, String message) {
         this.status = status;
         this.data = data;
@@ -25,8 +22,18 @@ public class Resource<T> {
         return new Resource<>(Status.ERROR, null, message);
     }
 
-    public Status getStatus() { return status; }
-    public T getData() { return data; }
-    public String getMessage() { return message; }
+    public Status getStatus() {
+        return status;
+    }
+
+    public T getData() {
+        return data;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public enum Status {LOADING, SUCCESS, ERROR}
 }
 

@@ -10,7 +10,7 @@
         android:layout_height="wrap_content">
 
         <androidx.cardview.widget.CardView
-            android:id="@+id/cardView5"
+            android:id="@+id/resto_avatar_wrapper"
             android:layout_width="70dp"
             android:layout_height="70dp"
             app:cardBackgroundColor="@color/gray"
@@ -26,8 +26,8 @@
             android:layout_height="16dp"
             android:layout_marginStart="8dp"
             android:background="@color/gray"
-            app:layout_constraintStart_toEndOf="@+id/cardView5"
-            app:layout_constraintTop_toTopOf="@+id/cardView5" />
+            app:layout_constraintStart_toEndOf="@+id/resto_avatar_wrapper"
+            app:layout_constraintTop_toTopOf="@+id/resto_avatar_wrapper" />
 
         <View
             android:id="@+id/product_amount"

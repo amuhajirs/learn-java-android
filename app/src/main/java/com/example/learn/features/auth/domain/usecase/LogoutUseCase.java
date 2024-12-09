@@ -1,9 +1,9 @@
 package com.example.learn.features.auth.domain.usecase;
 
-import com.example.learn.features.auth.data.dto.LogoutDto;
-import com.example.learn.features.auth.domain.repository.AuthRepository;
 import com.example.learn.common.constant.DatastoreConst;
 import com.example.learn.common.utils.DataStoreSingleton;
+import com.example.learn.features.auth.data.dto.LogoutDto;
+import com.example.learn.features.auth.domain.repository.AuthRepository;
 
 import javax.inject.Inject;
 

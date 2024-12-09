@@ -9,11 +9,11 @@ import androidx.lifecycle.ViewModel;
 import com.example.learn.common.constant.DatastoreConst;
 import com.example.learn.common.utils.DataStoreSingleton;
 import com.example.learn.common.utils.Resource;
-import com.example.learn.shared.data.dto.ErrorDto;
 import com.example.learn.features.auth.data.dto.LogoutDto;
+import com.example.learn.features.auth.domain.usecase.LogoutUseCase;
 import com.example.learn.features.resto.data.dto.GetRestosDto;
 import com.example.learn.features.resto.domain.usecase.GetRestosUseCase;
-import com.example.learn.features.auth.domain.usecase.LogoutUseCase;
+import com.example.learn.shared.data.dto.ErrorDto;
 import com.google.gson.Gson;
 
 import javax.inject.Inject;

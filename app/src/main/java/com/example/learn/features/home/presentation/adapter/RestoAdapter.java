@@ -1,5 +1,6 @@
 package com.example.learn.features.home.presentation.adapter;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.view.LayoutInflater;
@@ -10,6 +11,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
+import androidx.core.app.ActivityOptionsCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -45,13 +47,13 @@ public class RestoAdapter extends RecyclerView.Adapter<RestoAdapter.RestoViewHol
 
     @Override
     public int getItemViewType(int position) {
-        return isLoading ? ViewConst.VIEW_TYPE_SKELETON  : ViewConst.VIEW_TYPE_DATA;
+        return isLoading ? ViewConst.VIEW_TYPE_SKELETON : ViewConst.VIEW_TYPE_DATA;
     }
 
     @NonNull
     @Override
     public RestoViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        if(viewType == ViewConst.VIEW_TYPE_SKELETON ) {
+        if (viewType == ViewConst.VIEW_TYPE_SKELETON) {
             View view = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.skeleton_card_resto, parent, false);
             return new RestoViewHolder(view, viewType);
@@ -64,7 +66,7 @@ public class RestoAdapter extends RecyclerView.Adapter<RestoAdapter.RestoViewHol
 
     @Override
     public void onBindViewHolder(@NonNull RestoViewHolder holder, int position) {
-        if(isLoading) {
+        if (isLoading) {
             return;
         }
 
@@ -75,9 +77,9 @@ public class RestoAdapter extends RecyclerView.Adapter<RestoAdapter.RestoViewHol
         RestaurantDto resto = restos.get(position);
 
         Glide.with(holder.restoImage.getContext())
-            .load(resto.avatar)
-            .placeholder(R.drawable.img_placeholder)
-            .into(holder.restoImage);
+                .load(resto.avatar)
+                .placeholder(R.drawable.img_placeholder)
+                .into(holder.restoImage);
 
         holder.restoName.setText(resto.name);
         holder.restoCategory.setText(category.name);
@@ -93,13 +95,20 @@ public class RestoAdapter extends RecyclerView.Adapter<RestoAdapter.RestoViewHol
             intent.putExtra("category", category.name);
             intent.putExtra("rating_avg", resto.ratingAvg);
             intent.putExtra("rating_count", resto.ratingCount);
-            context.startActivity(intent);
+
+            ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(
+                    (Activity) context,
+                    holder.restoImageWrapper, // View yang akan di-share
+                    "shared_image" // Transition Name yang sama di kedua layout
+            );
+
+            context.startActivity(intent, options.toBundle());
         });
     }
 
     @Override
     public int getItemCount() {
-        if(isLoading) {
+        if (isLoading) {
             return 2;
         }
 
@@ -112,15 +121,16 @@ public class RestoAdapter extends RecyclerView.Adapter<RestoAdapter.RestoViewHol
     public static class RestoViewHolder extends RecyclerView.ViewHolder {
         TextView restoName, restoCategory, restoRating, restoRatingCount;
         ImageView restoImage;
-        CardView cardResto;
+        CardView cardResto, restoImageWrapper;
 
         public RestoViewHolder(@NonNull View itemView, int viewType) {
             super(itemView);
-            if(viewType == ViewConst.VIEW_TYPE_SKELETON) {
+            if (viewType == ViewConst.VIEW_TYPE_SKELETON) {
                 return;
             }
 
             restoImage = itemView.findViewById(R.id.resto_avatar);
+            restoImageWrapper = itemView.findViewById(R.id.resto_avatar_wrapper);
             restoName = itemView.findViewById(R.id.resto_name);
             restoCategory = itemView.findViewById(R.id.resto_category);
             restoRating = itemView.findViewById(R.id.resto_rating);

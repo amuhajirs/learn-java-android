@@ -1,6 +1,5 @@
 package com.example.learn.shared.presentation.widget;
 
-import android.app.Activity;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
@@ -8,6 +7,7 @@ import android.widget.ImageButton;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.example.learn.R;
@@ -34,8 +34,8 @@ public class CustomActionBar extends ConstraintLayout {
         searchInput = findViewById(R.id.action_search);
 
         backButton.setOnClickListener(v -> {
-            if (context instanceof Activity) {
-                ((Activity) context).finish();
+            if (context instanceof AppCompatActivity) {
+                ((AppCompatActivity) context).supportFinishAfterTransition();
             }
         });
     }
